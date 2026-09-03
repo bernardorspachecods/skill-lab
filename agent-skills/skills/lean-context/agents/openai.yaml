@@ -1,0 +1,5 @@
+interface:
+  display_name: "Lean Context"
+  short_description: "Prune agent-facing context"
+policy:
+  allow_implicit_invocation: false

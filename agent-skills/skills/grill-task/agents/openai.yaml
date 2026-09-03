@@ -1,0 +1,3 @@
+interface:
+  display_name: "Grill Task"
+  short_description: "Preflight a task before execution"

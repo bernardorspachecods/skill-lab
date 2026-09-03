@@ -1,0 +1,3 @@
+interface:
+  display_name: "Chat Start"
+  short_description: "Start with repo context and clear teamwork"

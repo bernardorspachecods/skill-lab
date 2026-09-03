@@ -1,0 +1,3 @@
+interface:
+  display_name: "Check Docs"
+  short_description: "Re-check docs and relevant code mid-task"

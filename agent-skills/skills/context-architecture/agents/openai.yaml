@@ -1,0 +1,3 @@
+interface:
+  display_name: "Context Architecture"
+  short_description: "Organize agent-facing repository context"

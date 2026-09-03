@@ -1,0 +1,6 @@
+interface:
+  display_name: "Research"
+  short_description: "Conduct rigorous, source-first web research"
+  default_prompt: "Use $research, choose the lightest safe rigor level, and show the evidence trail."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt Design"
+  short_description: "Create and improve LLM prompts"
+  default_prompt: "Create or improve a prompt for the task I describe. Ask one concise clarification question first if the goal is ambiguous."
