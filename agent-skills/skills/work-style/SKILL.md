@@ -1,6 +1,6 @@
 ---
 name: work-style
-description: Apply the user's preferred working principles throughout a conversation and task.
+description: Apply the user's working principles when the conversation shows a need to recalibrate reasoning or collaboration.
 ---
 
 Work with:

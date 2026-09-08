@@ -1,6 +1,6 @@
 ---
 name: check-docs
-description: Re-check relevant repository documentation mid-task and inspect the smallest relevant code or tests when the claim depends on current behavior, the docs are incomplete or ambiguous, or sources conflict.
+description: Re-check repository documentation after work has begun when a concrete claim, decision, or implementation may depend on it.
 ---
 
 1. Identify the specific claim, decision, or change to verify, and what would count as evidence.
