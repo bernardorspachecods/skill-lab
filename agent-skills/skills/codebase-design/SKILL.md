@@ -1,6 +1,18 @@
 ---
 name: codebase-design
-description: Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
+description: >
+  Use this skill for designing or reshaping a module's interface: deciding whether
+  two pieces of logic should merge into one deep module or stay separate, deciding
+  where a seam or injection point goes so a dependency can be swapped for a fake
+  in tests, comparing alternative interface designs before committing to one, or
+  judging whether an existing interface has too many methods, too many parameters,
+  or leaks internals. Also useful before splitting a large file or class into
+  several smaller ones, to check whether the split produces deep modules or just
+  spreads the same shallow interface across more files. Trigger on: interface
+  design, seam, deep module, shallow module, merge these, split this file, split
+  this class, too many methods, testable, mock, fake, stub, adapter, dependency
+  injection, ports and adapters, design it twice, compare interfaces, god object,
+  does too much, leaky abstraction, boundary.
 ---
 
 # Codebase Design

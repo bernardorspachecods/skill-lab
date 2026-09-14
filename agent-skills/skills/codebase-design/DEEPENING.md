@@ -29,6 +29,10 @@ Third-party services (Stripe, Twilio, etc.) you don't control. The deepened modu
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a port unless at least two adapters are justified (typically production + test). A single-adapter seam is just indirection.
 - **Internal seams vs external seams.** A deep module can have internal seams (private to its implementation, used by its own tests) as well as the external seam at its interface. Don't expose internal seams through the interface just because tests use them.
 
+## No test suite yet
+
+The categories above assume tests exist to run across the seam. If they don't yet, the categorization still matters — it determines whether a future test can reach the module's behaviour without hitting the real dependency — but building the adapter is optional until a test needs it. Place the seam correctly now (accept the dependency instead of constructing it internally); defer writing the in-memory or mock adapter until something — a test, or a second real caller — actually needs it. Building one anyway, for a test suite that doesn't exist, is exactly the hypothetical seam the seam-discipline rule above warns against.
+
 ## Testing strategy: replace, don't layer
 
 - Old unit tests on shallow modules become waste once tests at the deepened module's interface exist — delete them.

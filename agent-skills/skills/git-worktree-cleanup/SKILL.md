@@ -14,6 +14,7 @@ The invocation may add inclusions, exclusions, or a commit-message preference. A
 
 1. Inspect the repository root, branch, status, staged and unstaged diffs, and untracked files. Keep ignored files out of scope unless requested.
 2. Select the changes for the inferred phase and exception list. Review the staged diff for unrelated files, secrets, credentials, and accidental inclusions; stage only the intended paths or hunks.
+   If separating a small, adjacent pre-existing change would add disproportionate complexity, it may be included when it is harmless, understood, and unrelated to secrets or risky behavior. Report it explicitly.
 3. Create one focused commit with a concise task-derived message. For a start-of-task snapshot without a better description, use `chore(worktree): snapshot existing changes`.
 4. Verify the worktree and report the commit hash, message, and anything intentionally left behind.
 

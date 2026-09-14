@@ -15,6 +15,13 @@ This repository is the source of truth for reusable agent skills.
   copied into this catalog.
 - Runtime paths must point to this catalog; do not maintain independent copies.
 
+## Architecture map
+
+See [SKILL-ARCHITECTURE.md](SKILL-ARCHITECTURE.md) for the current-state
+catalog, route-to-skill matrix, principle inventory, and inferred composition
+relationships. That document is an `as-is` inventory, not a runtime instruction
+or a decision about which skills should later be kept, changed, or removed.
+
 ## Verification
 
 Validate every changed skill with the skill validator and check that runtime
