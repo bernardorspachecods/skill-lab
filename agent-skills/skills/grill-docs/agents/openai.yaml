@@ -1,4 +1,0 @@
-interface:
-  display_name: "Grill Docs"
-  short_description: "Explore ideas critically and document the plan"
-  default_prompt: "Use $grill-docs to stress-test this idea and document the confirmed plan."

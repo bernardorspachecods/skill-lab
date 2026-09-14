@@ -1,22 +1,33 @@
 ---
 name: context-architecture
-description: Design and maintain the information architecture of agent-facing repository documents. Use when creating, moving, splitting, merging, or restructuring context files and folders; preserve existing conventions and avoid imposing a fixed structure.
+description: Organize repository context and documentation structure. Use when creating or restructuring context files and folders.
 ---
 
-# Organize repository context
 
-Organize information so an unfamiliar agent can discover the repository, its rules, its current behavior, and the relevant context for a task. Optimize for retrieval and reliable decisions, not visual neatness or a universal folder tree.
+# Rules
 
-Before changing context files or folders:
+1. **Each document must have a specific purpose** - if it combines many purposes at once considering splitting
+2. **There should only be one source of truth.** - if there is duplication clean it, if there is contradictory info talk it out with the user
+3. **When writing be as concise and direct as possible** - maximize token efficiency and content quality at the same time
+4. **Keep context discoverable.** - an agent shouldn't have to guess where things are. link the documents. think of it as roads in a city, every building should have a road that leads to it
+5. **Separate durable context from temporary work.**
+6. **Keep things tidy and organized** - folders and files should always be organized and follow a consistent structure within the folder. Work in progress, archived work, and consolidated work should preferably be kept separate.
+7. **Just because it's written and committed doesn't make it correct** - If the repo docs structure is incorrect propose changes. By the end we should have all the core info intact, but better organized and with 0 duplicated rules, knowledge…
+8. **Do not repeat rules that an agent will read in skill** - the rules written for a repo should be specific to that repo, do not include general behavioral rules because agents will read those from skills anyways
 
-1. Read the applicable repository guidance (`AGENTS.md`, `READ.md`, `CLAUDE.md`, and equivalents).
-2. Inspect existing entrypoints, indexes, documentation folders, naming conventions, and the current code or tests they describe. Treat explicit local conventions as the default. If none exist, record that absence and infer from actual usage instead of inventing a taxonomy.
-3. Map each relevant document's purpose, audience, authority, and lifecycle. Categories such as rules, architecture decisions, domain knowledge, workflows, source notes, examples, and temporary work are useful distinctions, not a required directory structure.
-4. Identify the source of truth and any stale, duplicated, conflicting, or orphaned material. Repair, merge, or link it when safe and in scope; otherwise preserve it and explicitly report what is deferred or needs a decision. Surface meaningful conflicts instead of silently choosing a document.
-5. Choose the smallest sufficient change. Extend the canonical document when the audience, authority, and lifecycle are the same. Create a new file only for a genuinely distinct responsibility; create a folder only when multiple related documents or a clear boundary justify it.
-6. Make the result navigable from the repository root or the nearest existing relevant entrypoint. Use names that reveal purpose, link related documents, and preserve or repair links when moving material. Create a new root index only when it materially improves discovery.
-7. Perform a targeted discovery check: trace the path from the root or nearest entrypoint to the changed material, check affected links and references, and verify that another agent could understand the reading order, authority, and distinction between durable knowledge and temporary notes.
+# Structure
 
-Preserve a working local structure even when it differs from familiar patterns. Do not reorganize files for aesthetics, copy a generic documentation system into the repository, or create duplicate sources of truth. Ask before deleting or rewriting a source of truth, changing document ownership or authority, moving externally referenced or generated material, or making a broad or difficult-to-reverse restructuring.
+- **At the repository root:** use `README.md` for the public introduction, installation, and general usage; `AGENTS.md` for repository-specific behavioral rules that do not repeat general skill guidance; and `CONTEXT.md` for the map and orientation of the root folder.
+- **In each relevant folder:** give the folder its own `CONTEXT.md`, responsible for its purpose, organization, and orientation. Do not require context files in generated, temporary, dependency, or otherwise irrelevant folders unless they need durable guidance.
+- **Keep context local and avoid cascading updates:** the `CONTEXT.md` of a parent folder should describe its own scope, stable boundaries, and entrypoints, not every detail inside child folders. Changes inside a child folder should normally update only the nearest `CONTEXT.md`, unless they change the parent's scope, direct structure, or cross-folder contract.
 
-Finish when the requested information is in the smallest appropriate location, navigation is intact, no avoidable duplicate or orphan was introduced, and the resulting structure is consistent with the repository's own conventions.
+
+# Bad practices to look out for
+1. You have to find your way through the documents, instead of being guided by the documents - violates rule 4
+2. You have to update 2+ separate files with the same information when updating the repo documentation - violates rules 1 and 2
+3. A parent `CONTEXT.md` repeats the full contents of child `CONTEXT.md` files - violates rules 1, 2, and Structure.
+4. A routine change inside a child folder requires updating several parent `CONTEXT.md` files - violates the local context principle.
+5. A document contains work in progress, archived material, and consolidated knowledge without clear separation - violates rules 5 and 6.
+6. A relevant document exists but is not linked from the nearest `CONTEXT.md` - violates rule 4.
+7. `README.md`, `AGENTS.md`, and `CONTEXT.md` contain overlapping responsibilities - violates rule 1 and the root Structure.
+8. A `CONTEXT.md` lists every file manually and becomes stale after normal development - violates local context and discoverability.

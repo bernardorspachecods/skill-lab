@@ -144,7 +144,7 @@ If these conditions cannot be met, say so plainly and deliver a bounded partial 
 
 ## Route to other skills
 
-Use another available skill only when it materially improves the research method or the deliverable. Examples include `openai-docs` for OpenAI products, `prompt-design` for prompt research, `code-review` for repository change analysis, `domain-modeling` for domain terminology, and `grill-docs` for a documented decision. Do not create a chain of skills for generic research; state the handoff and its purpose.
+Use another available skill only when it materially improves the research method or the deliverable. Examples include `openai-docs` for OpenAI products, `prompt-design` for prompt research, `code-review` for repository change analysis, `domain-modeling` for domain terminology, and `grill-task` for a documented decision. Do not create a chain of skills for generic research; state the handoff and its purpose.
 
 ## Output contract
 

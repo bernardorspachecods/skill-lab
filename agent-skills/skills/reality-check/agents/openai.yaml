@@ -1,5 +1,0 @@
-interface:
-  display_name: "Reality Check"
-  short_description: "Recover from unsupported reasoning"
-policy:
-  allow_implicit_invocation: false
