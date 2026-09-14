@@ -1,0 +1,6 @@
+interface:
+  display_name: "Chat Wrap-up"
+  short_description: "Prepare context for the next chat"
+  default_prompt: "Use $chat-wrap-up to prepare a seamless continuation for the next chat."
+policy:
+  allow_implicit_invocation: false

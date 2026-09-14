@@ -1,9 +1,17 @@
 ---
 name: chat-start
-description: Start every chat by reading the relevant documentation in the current repository and adopting the user's preferred working style.
+description: Start chats with repository context and work style; orient before acting on open-ended requests.
 ---
 
-At the start of every chat, read the relevant documentation for the repository you are working in, beginning with its applicable agent instructions.
+At the start of every chat, read the applicable agent instructions. Read only
+the minimum additional documentation needed: without a specified topic, enough
+to identify the repository and its active context; with a specified topic, only
+the documents relevant to it. Never read more than necessary for orientation.
+
+Unless the first request is specific, direct, and simple, first use the
+relevant repository context to orient yourself on the topic and await further
+guidance. Briefly state the current phase or state, key decisions, and open
+questions; do not start work, make changes, or infer a task.
 
 Work with:
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Parallel Task"
+  short_description: "Delegate side tasks in three modes"
+  default_prompt: "Use $parallel-task in medium mode by default; use light mode for simple tasks and full mode only when explicitly requested."
+policy:
+  allow_implicit_invocation: false
