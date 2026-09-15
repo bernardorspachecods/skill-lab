@@ -1,6 +1,6 @@
 ---
 name: context-architecture
-description: Organize repository context and documentation structure. Use when creating or restructuring context files and folders.
+description: Build and maintain repository context and documentation structures. Use when creating, restructuring, or cleaning context files and folders.
 ---
 
 # Core principles
@@ -38,6 +38,14 @@ When the repository needs these distinctions, prefer the following names:
 - `working/` for working files and active state.
 - `reference/` for archived files that might still be useful as backup or for reference.
 - `research/` for files that support research and are still in use; move them to `reference/` when they are no longer in use.
+
+# Maintenance
+
+When cleaning existing context, remove duplicated, stale, vague, or decorative material. Preserve information that changes future decisions, and keep necessary uncertainty visible. Do not reorganize a working local structure solely for neatness or word count.
+
+# Verification
+
+After editing, verify frontmatter, names, links, references, runtime paths, and repository conventions. Re-read the edited documents as an agent would: can it identify what to do, when to do it, what to read, what to ignore, and when it is finished? Run realistic examples or relevant checks when they can reveal a behavioral regression.
 
 # Bad practices to look out for
 1. You have to find your way through the documents, instead of being guided by the documents - violates rule 3

@@ -11,7 +11,7 @@ the middle of a task. The runtime sources remain each skill's `SKILL.md`, its
 ## Scope and status
 
 - Snapshot date: 2026-09-12.
-- Catalog covered: all 19 skills currently under `skills/`.
+- Catalog covered: all 18 skills currently under `skills/`.
 - Classification basis: frontmatter descriptions, `agents/openai.yaml`, skill
   instructions, linked skill references, and the existing task routes.
 - This is an `as-is` inventory. It records current evidence and useful
@@ -80,7 +80,6 @@ introduced.
 | [`grill-task`](skills/grill-task/SKILL.md) | model-selectable | Clarify tasks and decisions into actionable plans | task routing; complex work before execution | observed/inferred |
 | [`grill`](skills/grill/SKILL.md) | model-selectable | Critically examine an idea, plan, or result without documenting it | `feature_evaluation`; `ask_human`; exploratory work | observed/inferred |
 | [`handoff`](skills/handoff/SKILL.md) | manual-only | Transfer active work to another agent or session | task transition; long-running work | observed |
-| [`lean-context`](skills/lean-context/SKILL.md) | manual-only | Remove redundant or stale agent-facing context | `documentation`; context cleanup | observed |
 | [`prompt-design`](skills/prompt-design/SKILL.md) | model-selectable | Create, improve, audit, or structure prompts and briefs | `quick_answer`; `documentation`; route-specific prompt work | observed/inferred |
 | [`prototype`](skills/prototype/SKILL.md) | model-selectable | Build a throwaway prototype to answer a design question | `app_revamp`; `feature_evaluation`; exploratory software work | observed/inferred |
 | [`research`](skills/research/SKILL.md) | manual-only | Conduct rigorous source-first web research | `research_synthesis`; `long_document_analysis` | observed |
@@ -92,8 +91,8 @@ introduced.
 The current catalog contains:
 
 - 13 skills without an explicit manual-only policy in `agents/openai.yaml`;
-- 6 skills explicitly marked `manual-only`:
-  `fresh-eyes`, `git-worktree-cleanup`, `handoff`, `lean-context`,
+- 5 skills explicitly marked `manual-only`:
+  `fresh-eyes`, `git-worktree-cleanup`, `handoff`,
   `research`, and `chat-wrap-up`;
 - 1 lifecycle skill whose description says it starts every chat:
   `chat-start`;
@@ -120,7 +119,7 @@ workflow references. They are not target bundles.
 | `research_synthesis` | `research` M ● | `chat-start` ○, `grill-task` ○ | `prompt-design` ? for the research brief; `grill-task` ? when evidence becomes durable documentation; `check-docs` ? for repository claims | inferred |
 | `long_document_analysis` | `research` M ● | `chat-start` ○ | `prompt-design` ? for the brief; `grill-task` ? when the result becomes a decision or durable plan | inferred |
 | `feature_evaluation` | `grill` ● or `grill-task` ● when a durable plan is needed | `grill-task` ○, `codebase-design` ○, `domain-modeling` ○ | `research` M for external evidence; `prototype` ? for a design question; `fresh-eyes` M after a result | inferred |
-| `documentation` | `context-architecture` ● for structure | `check-docs` ○, `grill-task` ○ | `grill-task` ? for a durable decision; `domain-modeling` ? for terminology; `lean-context` M for cleanup; `prompt-design` ? for prompts | inferred |
+| `documentation` | `context-architecture` ● for structure and cleanup | `check-docs` ○, `grill-task` ○ | `grill-task` ? for a durable decision; `domain-modeling` ? for terminology; `prompt-design` ? for prompts | inferred |
 | `ask_human` | `grill` ● for critical examination; `grill-task` ● when an actionable or documented plan is needed | — | `grill-stuck` ? when evidence or context is unreliable; `research` M when external evidence is needed | inferred |
 
 ### Cross-cutting lifecycle and recovery map
@@ -146,7 +145,6 @@ catalog. They are not runtime bundles and do not prescribe a future workflow.
 ```text
 context-architecture  → identifies audience, authority, ownership, and placement
 check-docs             → checks current repository guidance when claims depend on it
-lean-context           → optional manual cleanup when redundancy is the task
 fresh-eyes             → optional manual review after the result exists
 ```
 
@@ -186,7 +184,7 @@ where the idea currently appears, not an accepted ownership assignment.
 | `P-001` | Read applicable repository guidance before acting. | explicit | `chat-start`; `context-architecture`; `test-first`; `grill`; `grill-stuck` | repeated across entrypoint and task-specific workflows |
 | `P-002` | Route or classify the work before choosing context and workflow. | explicit | `grill-task`; `prompt-design`; `knowledge/agents/task-routing.md`; `knowledge/context/context-selection.md` | shared routing principle across skills and knowledge docs |
 | `P-003` | Choose the smallest sufficient workflow and avoid unnecessary process. | explicit | `skill-authoring`; `context-architecture`; `knowledge/agents/agent-workflows.md` | appears in both skill-writing and general workflow guidance |
-| `P-004` | Keep one canonical source of truth and link rather than duplicate. | explicit | `skill-authoring`; `context-architecture`; `lean-context` | likely overlap to resolve later |
+| `P-004` | Keep one canonical source of truth and link rather than duplicate. | explicit | `skill-authoring`; `context-architecture` | likely overlap to resolve later |
 | `P-005` | Preserve local conventions and surface conflicts instead of silently replacing them. | explicit | `context-architecture`; `skill-authoring`; `check-docs` | shared documentation/context rule |
 | `P-006` | Separate exploration, commitment, and implementation. | explicit | `grill`; `grill-task` | the two skills have different planning outcomes |
 | `P-007` | Ask the human only when the decision is material, ambiguous, private, risky, or not safely discoverable. | explicit | `skill-authoring`; `prompt-design`; `grill-task`; `knowledge/agents/task-routing.md` | compare different wording and thresholds later |
@@ -196,11 +194,11 @@ where the idea currently appears, not an accepted ownership assignment.
 | `P-011` | Prefer deep interfaces, locality, and small surfaces over pass-through abstractions. | explicit | `codebase-design` | currently concentrated in one skill |
 | `P-012` | Use independent review when the primary agent may be too invested in the result. | explicit | `fresh-eyes`; `code-review` | review axes and independence differ |
 | `P-013` | Set stop conditions for iterative, delegated, or evidence-gathering work. | explicit | `research`; `code-review`; `skill-authoring`; `knowledge/agents/agent-workflows.md` | repeated across workflow types |
-| `P-014` | Load targeted context and remove stale or irrelevant material. | explicit | `lean-context`; `context-architecture`; `knowledge/context/context-selection.md` | related to `P-004`, but not identical |
+| `P-014` | Load targeted context and remove stale or irrelevant material. | explicit | `context-architecture`; `knowledge/context/context-selection.md` | related to `P-004`, but not identical |
 | `P-015` | Make prototypes disposable and capture only validated decisions in the real system. | explicit | `prototype` | currently concentrated in one skill |
 | `P-016` | Use source-ledger and claim-level evidence for rigorous research. | explicit | `research` | research-specific; not automatically shared by all documentation |
 | `P-017` | Adapt collaboration to the user's working principles and keep them involved. | explicit | `grill`; `chat-start` | collaboration-specific expression |
-| `P-018` | Keep manual-only workflows explicit and human-triggered. | explicit | `fresh-eyes`; `git-worktree-cleanup`; `handoff`; `lean-context`; `research` metadata/descriptions | runtime policy and prose should be compared in future review |
+| `P-018` | Keep manual-only workflows explicit and human-triggered. | explicit | `fresh-eyes`; `git-worktree-cleanup`; `handoff`; `research` metadata/descriptions | runtime policy and prose should be compared in future review |
 
 No principle in this table has a canonical owner yet. That is intentional for
 the current-state phase.
@@ -214,17 +212,17 @@ does not label the overlap as a defect.
 | --- | --- | --- | --- |
 | Repository guidance before action | `chat-start`, `context-architecture`, `test-first`, `grill`, `grill-stuck` | Similar entry behavior is expressed in several workflows. | observed; unresolved |
 | Routing before workflow | `grill-task`, `prompt-design`, task-routing and context-selection docs | Several documents describe routing at different levels. | observed; unresolved |
-| Single source of truth / duplication control | `context-architecture`, `skill-authoring`, `lean-context` | All three address duplication, but with different audiences. | observed; unresolved |
+| Single source of truth / duplication control | `context-architecture`, `skill-authoring` | Both address duplication, with different audiences. | observed; unresolved |
 | Verification before completion | `check-docs`, `skill-authoring`, `test-first`, `research`, `fresh-eyes` | Verification is distributed across task types and review modes. | observed; unresolved |
 | Critical examination and human checkpoints | `grill`, `grill-task`, `grill-stuck` | The skills have distinct stated purposes, but their selection boundaries merit comparison. | inferred; unresolved |
-| Context reduction and selective reading | `lean-context`, `context-architecture`, `context-selection` | Related context-management guidance exists at skill and knowledge levels. | observed; unresolved |
+| Context reduction and selective reading | `context-architecture`, `context-selection` | Related context-management guidance exists at skill and knowledge levels. | observed; unresolved |
 
 ## 5. Sources and maintenance boundary
 
 ### Primary sources used for this snapshot
 
 - [`agent-skills/AGENTS.md`](AGENTS.md)
-- all 19 `skills/*/SKILL.md` files;
+- all 18 `skills/*/SKILL.md` files;
 - all present `skills/*/agents/openai.yaml` files;
 - [`knowledge/agents/task-routing.md`](../knowledge/agents/task-routing.md);
 - [`knowledge/context/context-selection.md`](../knowledge/context/context-selection.md);
