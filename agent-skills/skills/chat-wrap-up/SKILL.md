@@ -1,21 +1,28 @@
 ---
 name: chat-wrap-up
-description: Prepare repository context for seamless continuation after chat compaction. Invoke explicitly when ending or nearing compaction.
+description: Preserve repository context when ending or nearing chat compaction.
 ---
-
-# Wrap up the chat
 
 Use the conversation and repository state to prepare a seamless continuation.
 Preserve what a fresh agent needs, not a generic progress summary.
 
-## Reconcile and document
+Ending a chat does not by itself close a phase or decision.
 
-Read the repository's entrypoints and documentation ownership/routing guidance,
-then inspect relevant documents, code, tests, diffs, and notes. Capture the
-objective, status, changed artifacts, confirmed decisions, assumptions, open
-questions, blockers, verification, and exact next step.
+## Capture
 
-Route each material item to its proper place:
+Read the applicable repository entrypoints and context guidance. Inspect only
+the relevant documents, code, tests, diffs, and notes. Capture:
+
+- objective and scope;
+- current phase and status;
+- changed artifacts and verification;
+- confirmed decisions;
+- assumptions, open questions, and blockers;
+- the exact next step.
+
+## Reconcile
+
+Route each durable item to its canonical owner:
 
 - link the existing source of truth;
 - update its canonical owner when durable information is missing;
@@ -24,29 +31,18 @@ Route each material item to its proper place:
 
 Keep decisions separate from assumptions and open questions. Preserve the
 user's intent and scope: do not infer approval, close unresolved decisions, or
-promote provisional findings. Prefer the existing canonical owner and avoid
-duplication; use the designated non-canonical location for any handoff note.
+promote provisional findings. Use the designated non-canonical location for
+handoff notes. Do not redesign the context structure or change document
+ownership; use `$context-architecture` when that work is required.
 
-## Consistency gate
+## Verify
 
-When closing a phase or decision, check the relevant documents, indexes, and
-links together. No active or canonical document may contradict the closed
-phase or current plan.
+Before reporting, check the relevant active documents, indexes, and links
+together:
 
-Historical material may preserve earlier decisions only when clearly marked as
-reference or archive and excluded from active reading paths. If contradictions
-remain, reconcile them or report the wrap-up as incomplete. Never silently
-choose a source or claim a seamless handoff while the documentation conflicts.
-
-## Verify the wrap-up
-
-Check that:
-
-- every material item is linked, documented, or explicitly unresolved;
-- changed documents have the right owner, without avoidable duplication;
+- contradictions are reconciled or reported as incomplete;
+- changed documents have the right owner and no avoidable duplication;
 - links and reading paths resolve from the relevant entrypoint;
-- the current phase and decisions are represented consistently across the
-  relevant documentation;
 - a fresh agent can identify the objective, current state, open decisions, and
   next step without this conversation.
 
