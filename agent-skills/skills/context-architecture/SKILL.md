@@ -28,7 +28,7 @@ description: Build and maintain repository context and documentation structures.
 
 These files have fixed responsibilities:
 
-- `README.md` for the public introduction, installation, and general usage at a repository or independently used package root. Do not create or maintain one for an internal folder merely to document its contents; use the nearest `CONTEXT.md` instead.
+- `README.md` is a GitHub-facing public artifact only. Never reference it from application code or application documentation, and never use it to record internal application context. Update it only for public presentation when the user explicitly requests it; record all other application information in the appropriate `CONTEXT.md` or canonical document.
 - `AGENTS.md` for repository-specific behavioral rules that do not repeat general skill guidance. It is not a general repository index or catch-all document; do not use it for product vision, architecture, current state, plans, or general documentation.
 - `CONTEXT.md` for the map and orientation of a folder.
 
