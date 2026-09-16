@@ -1,31 +1,13 @@
 ---
 name: git-worktree-cleanup
-description: Clean a Git worktree by committing the changes relevant to the current task, either existing changes before work starts or changes just made by the agent. Invoke manually when you want the worktree clean.
+description: Commit the work done and preserve unrelated work.
 ---
 
-# Clean the Git worktree
+- Commits only the changes that belong to you and preserve unrelated pre-existing work.
+- Keep ignored files out of scope unless requested.
+- Create one focused commit with a concise task-derived message. For a start-of-task snapshot without a better description, use `chore(worktree): snapshot existing changes`.
+- Verify the worktree and report the commit message, and anything intentionally left behind.
 
-Infer the phase from the recent conversation and work:
+If the worktree is clean, report that no commit was necessary.
 
-- **Before a task:** when the agent has not changed anything for the current task, commit the changes already present.
-- **After a task:** when the agent has just finished work, commit that task's changes and preserve unrelated pre-existing changes.
-
-The invocation may add inclusions, exclusions, or a commit-message preference. Apply them exactly.
-
-1. Inspect the repository root, branch, status, staged and unstaged diffs, and untracked files. Keep ignored files out of scope unless requested.
-2. Select the changes for the inferred phase and exception list. Review the staged diff for unrelated files, secrets, credentials, and accidental inclusions; stage only the intended paths or hunks.
-   If separating a small, adjacent pre-existing change would add disproportionate complexity, it may be included when it is harmless, understood, and unrelated to secrets or risky behavior. Report it explicitly.
-3. Create one focused commit with a concise task-derived message. For a start-of-task snapshot without a better description, use `chore(worktree): snapshot existing changes`.
-4. Verify the worktree and report the commit hash, message, and anything intentionally left behind.
-
-Do not push, amend, rewrite history, stash, reset, restore, clean, or delete files. Creating a commit is the cleanup operation.
-
-Stop before committing if the intended changes cannot be separated reliably, exceptions conflict, a merge or rebase is in progress, or HEAD is detached. Ask for the smallest clarification needed. If the worktree is clean, report that no commit was necessary.
-
-Examples:
-
-```text
-$git-worktree-cleanup
-$git-worktree-cleanup, não incluir o .env nem os ficheiros em docs/drafts
-$git-worktree-cleanup, usa a mensagem "feat: add billing filters"
-```
+If this committing only your changes involves a lot of work (more than 3 separations), STOP and report back to the user
