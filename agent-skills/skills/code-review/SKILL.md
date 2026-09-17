@@ -10,6 +10,12 @@ Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
 
 Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
+## Finding format
+
+Write each finding as `file:line — severity — problem. Fix.` Use exact symbols
+and locations. Omit throat-clearing, repeated praise, and empty hedging. Use
+full explanation when the finding involves security, architecture, or onboarding.
+
 If the repository has an issue-tracker workflow at `docs/agents/issue-tracker.md`, read it before fetching issue references. If no workflow exists, use the spec supplied by the user or ask where the originating spec lives; do not assume an external setup command.
 
 ## Process

@@ -30,6 +30,8 @@ Keep routing information in the description and execution instructions in the bo
 
 The body should contain the shared workflow, decision rules, real constraints, and completion criteria. Put substantial branch-specific guidance in `references/` and link it with a clear condition for reading it. Add scripts or assets only when they provide concrete reusable value.
 
+Do not add modes, configuration, providers, scripts, or extra branches without a concrete current use case and verification need.
+
 Use examples to clarify behavior, output shape, or failure modes. Keep them canonical and label examples as examples; do not let their accidental details become requirements.
 
 ### Splitting and routing

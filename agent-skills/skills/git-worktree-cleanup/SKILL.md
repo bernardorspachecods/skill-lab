@@ -3,6 +3,7 @@ name: git-worktree-cleanup
 description: Commit the work done and preserve unrelated work.
 ---
 
+If the user says to commit all, do ti, if not:
 - Commits only the changes that belong to you and preserve unrelated pre-existing work.
 - Keep ignored files out of scope unless requested.
 - Create one focused commit with a concise task-derived message. For a start-of-task snapshot without a better description, use `chore(worktree): snapshot existing changes`.

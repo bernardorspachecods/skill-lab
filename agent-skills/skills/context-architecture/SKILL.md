@@ -20,9 +20,21 @@ description: Build and maintain repository context and documentation structures.
 
 # Structure
 
-- **At the repository root:** always keep `README.md` and `CONTEXT.md`. Create `AGENTS.md` only when the repository has specific behavioral rules for agents; do not create an empty or placeholder file.
+- **At the repository root:** always keep `CONTEXT.md`. Create `AGENTS.md` only when the repository has specific behavioral rules for agents; do not create an empty or placeholder file.
 - **In each relevant folder:** give the folder its own `CONTEXT.md`. Do not require context files in generated, temporary, dependency, or otherwise irrelevant folders unless they need durable guidance.
 - **Keep context local and avoid cascading updates:** the `CONTEXT.md` of a parent folder should describe its own scope, stable boundaries, and entrypoints, not every detail inside child folders. Changes inside a child folder should normally update only the nearest `CONTEXT.md`, unless they change the parent's scope, direct structure, or cross-folder contract.
+
+# `CONTEXT.md` format and use
+
+- List relevant direct destinations as `[path](path) — specific responsibility`. Do not write headings, introductions, or exhaustive source-file inventories. If descriptions overlap, inspect the contents and resolve any duplicated responsibility.
+- Read the nearest relevant `CONTEXT.md` and only task-relevant links. Use parent maps when the area or boundary is unclear; when entering an area directly, check its parent entry if its authority or lifecycle is unclear.
+- Update the map only when a destination, responsibility, or boundary changes; routine edits within an existing responsibility need no map update.
+
+Example entry:
+
+```md
+- [user_preferences.md](user_preferences.md) — User preferences for the agent's tone in chats.
+```
 
 # Terminology
 
@@ -41,7 +53,7 @@ When the repository needs these distinctions, prefer the following names:
 
 # Maintenance
 
-When cleaning existing context, remove duplicated, stale, vague, or decorative material. Preserve information that changes future decisions, and keep necessary uncertainty visible. Do not reorganize a working local structure solely for neatness or word count.
+When cleaning existing context, remove duplicated, stale, vague, or decorative material. Preserve information that changes future decisions, and keep necessary uncertainty visible. Do not reorganize a working local structure solely for neatness or word count. Do not alter authoritative documentation merely to save tokens.
 
 # Verification
 

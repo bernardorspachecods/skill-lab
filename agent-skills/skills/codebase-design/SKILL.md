@@ -1,18 +1,13 @@
 ---
 name: codebase-design
 description: >
-  Use this skill for designing or reshaping a module's interface: deciding whether
-  two pieces of logic should merge into one deep module or stay separate, deciding
-  where a seam or injection point goes so a dependency can be swapped for a fake
-  in tests, comparing alternative interface designs before committing to one, or
-  judging whether an existing interface has too many methods, too many parameters,
-  or leaks internals. Also useful before splitting a large file or class into
-  several smaller ones, to check whether the split produces deep modules or just
-  spreads the same shallow interface across more files. Trigger on: interface
-  design, seam, deep module, shallow module, merge these, split this file, split
-  this class, too many methods, testable, mock, fake, stub, adapter, dependency
-  injection, ports and adapters, design it twice, compare interfaces, god object,
-  does too much, leaky abstraction, boundary.
+  Design or reshape module interfaces: merge or split logic, place seams for
+  swappable dependencies, compare alternatives, or assess interface size,
+  leakage, and testability. Use before splitting modules or classes. Do not use
+  for routine implementation changes without an interface decision. Triggers:
+  interface, seam, deep module, shallow module, merge, split, testable, mock,
+  fake, stub, adapter, dependency injection, ports and adapters, design it
+  twice, god object, leaky abstraction.
 ---
 
 # Codebase Design
@@ -75,6 +70,13 @@ When designing an interface, ask:
 - **The deletion test.** Imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.
 - **The interface is the test surface.** Callers and tests cross the same seam. If you want to test *past* the interface, the module is probably the wrong shape.
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a seam unless something actually varies across it.
+
+## Scope control and refactoring safety
+
+- Define behavior to preserve and explicit non-goals before structural edits.
+- Avoid speculative generality, modes, dependencies, or configuration.
+- Move one ownership seam at a time; keep intermediate states buildable and testable.
+- Preserve public interfaces, failure behavior, ordering, and compatibility unless the task explicitly changes them.
 
 ## Designing for testability
 

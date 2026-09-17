@@ -41,6 +41,16 @@ authoritative sources, full provenance and dates, a conflict log, and specialist
 or human review when possible. If evidence is inadequate, give a bounded answer
 rather than a confident recommendation.
 
+## Academic research mode
+
+When the task involves a paper, literature review, thesis, empirical result, or
+research-question design, read [academic-research-mode.md](references/academic-research-mode.md)
+after choosing the rigor level. It adds a source-preserving pipeline for paper
+orientation, finding extraction, thematic synthesis, and question design; it
+does not replace the claim/evidence rules below. Use only the stages the task
+needs, and keep the original paper and extracted evidence available to every
+later stage.
+
 Evidence must fit the claim:
 
 - current fact → direct authority or primary record matching the relevant
@@ -56,7 +66,9 @@ Evidence must fit the claim:
   without evidence. A recommendation is an inference, not a fact.
 
 If evidence is missing, mark the claim `partially supported`, `uncertain`, or
-`no adequate evidence`, then weaken or remove it.
+`no adequate evidence`, then weaken or remove it. Do not treat generated
+summaries, a claimed “research gap,” “novelty,” or “consensus” as evidence until
+the underlying sources and scope have been checked.
 
 ## Workflow
 

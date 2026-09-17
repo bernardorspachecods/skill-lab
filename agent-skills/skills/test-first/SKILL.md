@@ -7,7 +7,7 @@ description: Use test-first development for new features or bug fixes when the b
 
 Use this workflow when implementing a feature or fixing a bug whose expected behavior is clear enough to drive with tests. Do not force it onto prototypes, exploratory work, documentation, visual experimentation, or trivial configuration changes.
 
-Before coding, read the applicable `AGENTS.md`, `READ.md`, `CONTEXT.md`, ADRs, and test conventions. Identify the first behavior and the public seam through which it should be observed. Ask for clarification only when the behavior or seam is genuinely ambiguous.
+Before coding, read the applicable documentation files and test conventions. Identify the first behavior and the public seam through which it should be observed. Ask for clarification only when the behavior or seam is genuinely ambiguous.
 
 Work in small vertical slices:
 
@@ -19,9 +19,9 @@ Work in small vertical slices:
 
 Tests should describe observable behavior through public interfaces and use independent expected values. Prefer real collaborators; mock system boundaries only when necessary. Avoid tests coupled to implementation details, private methods, call counts, or duplicated implementations. Read [tests.md](tests.md) for examples and [mocking.md](mocking.md) when deciding how to isolate a boundary.
 
-For bug fixes, start with a regression test that reproduces the bug. If the test does not fail for the expected reason, investigate before changing production code. If tests cannot run or their result is inconclusive, report that clearly and do not claim the cycle is complete. Do not write a large batch of speculative tests or implementation ahead of the next slice.
+For bug fixes, start with a regression test that reproduces the bug. If the test does not fail for the expected reason, investigate before changing production code. If tests cannot run or their result is inconclusive, report that clearly and do not claim the cycle is complete. After the focused test passes, run the nearest affected gate and distinguish `pass`, `fail`, `unavailable`, and `inconclusive`. Do not write a large batch of speculative tests or implementation ahead of the next slice.
 
-Finish when the requested behavior is covered, the relevant tests pass, and no speculative behavior was added. Report the tests run and any limitations.
+Finish when the requested behavior is covered, the relevant tests and nearest affected gate pass, and no speculative behavior was added. Stop there. Report the tests run and any limitations.
 
 Example:
 
