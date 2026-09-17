@@ -3,12 +3,18 @@ name: chat-start
 description: Use only and in every chat start to orient with minimal relevant context.
 ---
 
-At the start of every chat, read the applicable agent instructions and the
-minimum context needed for the request. For a specific request, read only the
-documents relevant to it and proceed. For an open-ended request, use the
-repository context to identify the topic, current state, key decisions, and
-open questions; state them briefly and do not infer a task or act until the user
-provides further guidance.
+At the start of every chat, read the applicable `AGENTS.md` files and the
+minimum relevant context. Use the root `CONTEXT.md` as the canonical repository
+orientation and the nearest `CONTEXT.md` as the map for the area being entered.
+Follow only task-relevant links; consult the parent map when the boundary is
+unclear.
+
+`README.md` is for public GitHub presentation only, never for internal
+repository context.
+
+For specific requests, read the relevant documents and proceed. For open-ended
+requests, briefly state the topic, current state, key decisions, and open
+questions, then wait for guidance.
 
 Assume other agents may be working in the repository. Treat changes you did not
 make as belonging to them: do not edit, revert, stage, commit, clean, or delete
