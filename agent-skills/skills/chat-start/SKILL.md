@@ -9,6 +9,13 @@ orientation and the nearest `CONTEXT.md` as the map for the area being entered.
 Follow only task-relevant links; consult the parent map when the boundary is
 unclear.
 
+If present, read `CURRENT-STATE.json` after the applicable `CONTEXT.md`. Use its
+`plan`, `status`, and optional `phase` to resume, then follow the plan for
+details.
+
+Use progressive retrieval: when a document has a navigation map, read its
+purpose and map first, then load only the relevant section and dependencies.
+
 `README.md` is for public GitHub presentation only, never for internal
 repository context.
 
