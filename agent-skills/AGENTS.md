@@ -2,6 +2,8 @@
 
 This repository is the source of truth for reusable agent skills.
 
+See the applicable workspace map: [CONTEXT.md](../CONTEXT.md).
+
 ## Contract
 
 - Every skill lives in `skills/<skill-name>/`.

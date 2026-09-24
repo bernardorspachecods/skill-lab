@@ -1,0 +1,43 @@
+{
+  "case_id": "002-assignment-notification",
+  "authoritative_paths": [
+    "docs/product/rules.md",
+    "docs/architecture/system-boundaries.md"
+  ],
+  "implementation_paths": [
+    "packages/core/src/context_lab_core/services.py",
+    "packages/core/src/context_lab_core/ports.py",
+    "apps/api/src/context_lab_api/app.py",
+    "apps/worker/src/context_lab_worker/worker.py",
+    "packages/storage/src/context_lab_storage/memory.py",
+    "packages/storage/src/context_lab_storage/sqlite.py"
+  ],
+  "supporting_tests": [
+    "packages/core/tests/test_task_service.py",
+    "apps/api/tests/test_app.py",
+    "apps/worker/tests/test_worker.py",
+    "packages/storage/tests/test_sqlite.py"
+  ],
+  "required_claims": [
+    {
+      "id": "assignee-membership-required",
+      "description": "The assignee must belong to the task's workspace."
+    },
+    {
+      "id": "notification-created-synchronously",
+      "description": "Notification creation is synchronous with task creation."
+    },
+    {
+      "id": "worker-performs-delivery",
+      "description": "The worker performs notification delivery."
+    },
+    {
+      "id": "creation-not-update-assignment",
+      "description": "The baseline has task assignment as a create-task option, not a separate update use case."
+    }
+  ],
+  "disallowed_claims": [
+    "the repository has a standalone assignment endpoint",
+    "notification delivery is synchronous"
+  ]
+}

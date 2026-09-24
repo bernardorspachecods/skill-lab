@@ -1,0 +1,45 @@
+{
+  "case_id": "004-undelivered-notification",
+  "authoritative_paths": [
+    "docs/product/rules.md",
+    "docs/architecture/system-boundaries.md"
+  ],
+  "implementation_paths": [
+    "packages/core/src/context_lab_core/services.py",
+    "packages/core/src/context_lab_core/ports.py",
+    "apps/worker/src/context_lab_worker/worker.py",
+    "packages/storage/src/context_lab_storage/memory.py",
+    "packages/storage/src/context_lab_storage/sqlite.py"
+  ],
+  "supporting_tests": [
+    "packages/core/tests/test_task_service.py",
+    "apps/worker/tests/test_worker.py",
+    "packages/storage/tests/test_sqlite.py"
+  ],
+  "required_claims": [
+    {
+      "id": "failure-leaves-pending",
+      "description": "A delivery exception leaves the notification pending for a later invocation."
+    },
+    {
+      "id": "mark-after-success",
+      "description": "Delivery is marked only after the delivery call succeeds."
+    },
+    {
+      "id": "no-built-in-retry-policy",
+      "description": "The worker has no built-in backoff, dead-letter, or retry loop."
+    },
+    {
+      "id": "no-external-provider",
+      "description": "The baseline has no concrete external delivery integration."
+    },
+    {
+      "id": "documented-versus-verified",
+      "description": "The answer distinguishes documented intent from code and test evidence."
+    }
+  ],
+  "disallowed_claims": [
+    "the worker guarantees user receipt",
+    "the worker retries with backoff automatically"
+  ]
+}

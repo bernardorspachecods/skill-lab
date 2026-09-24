@@ -7,8 +7,9 @@ description: Clarify tasks and decisions into actionable plans.
 
 1. Every task and plan must have a clear overarching objective that remains visible throughout planning and execution.
 2. Use the surrounding request as context; do not ask the user to restate it. When working in a repository, read all applicable guidance, then inspect only the documentation and code needed to define the task.
-3. Ask one question at a time. After each answer, reassess whether enough information is available to define the plan. Continue asking questions when necessary; do not impose a fixed limit.
-4. Use the answers to decide whether the request needs a short plan or deeper exploration of a material ambiguity, trade-off, or decision.
+3. Treat assumptions and questions as costs: investigate assumptions that could cause rework, and resolve safe, reversible details without asking. Ask only when the cost of being wrong is higher than the cost of interrupting the user.
+4. Ask one question at a time. After each answer, reassess whether enough information is available to define the plan. Continue asking questions when necessary; do not impose a fixed limit.
+5. Use the answers to decide whether the request needs a short plan or deeper exploration of a material ambiguity, trade-off, or decision.
 
 ## Keep scope useful
 

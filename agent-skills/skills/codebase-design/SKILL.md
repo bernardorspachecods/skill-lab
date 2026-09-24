@@ -70,13 +70,14 @@ When designing an interface, ask:
 - **The deletion test.** Imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.
 - **The interface is the test surface.** Callers and tests cross the same seam. If you want to test *past* the interface, the module is probably the wrong shape.
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a seam unless something actually varies across it.
+- Prefer established patterns before inventing new abstractions or interfaces. Check the codebase and relevant dependencies first, and adopt a proven shape when it fits the problem.
 
 ## Scope control and refactoring safety
 
 - Define behavior to preserve and explicit non-goals before structural edits.
 - Avoid speculative generality, modes, dependencies, or configuration.
 - Move one ownership seam at a time; keep intermediate states buildable and testable.
-- Preserve public interfaces, failure behavior, ordering, and compatibility unless the task explicitly changes them.
+- Do not preserve backward compatibility by default. Preserve public interfaces, failure behavior, ordering, and compatibility when they are current requirements; when an interface is intentionally changed, remove obsolete paths instead of adding compatibility layers, fallbacks, or migrations.
 
 ## Designing for testability
 
