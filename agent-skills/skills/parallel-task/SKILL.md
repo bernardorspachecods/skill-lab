@@ -17,6 +17,11 @@ Read `references/independent-review.md` for `review` mode and
 `references/delegation-modes.md` for `light`, `medium`, or `full` mode before
 continuing. The selected reference defines the detailed workflow and output.
 
+For `medium`, `full`, or `review`, also read
+`../plan-management/references/temporary-delegation-plans.md` before creating
+the run packet. It defines the coordinator-owned execution plan, reserved
+findings files, review file, ownership boundaries, and cleanup lifecycle.
+
 ## Shared principles
 
 For delegated work, use the smallest sufficient packet and keep the work

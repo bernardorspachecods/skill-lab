@@ -26,9 +26,7 @@ REQUIRED_SECTIONS = [
     "Objective",
     "Scope",
     "Output",
-    "Dependencies",
     "Sequence",
-    "Consumers",
     "Completion criteria",
 ]
 ALLOWED_KINDS = {"root", "subplan"}
