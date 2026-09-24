@@ -16,9 +16,10 @@ principles before a later improvement pass.
 | [`evaluate-relevance`](skills/evaluate-relevance/SKILL.md) | draft; model-selectable | Context-led assessment of technology relevance for Bernardo |
 | [`git-worktree-cleanup`](skills/git-worktree-cleanup/SKILL.md) | manual-only | Commit task-relevant changes and preserve unrelated work |
 | [`grill-stuck`](skills/grill-stuck/SKILL.md) | model-selectable | Re-ground unreliable work and recover from failed approaches |
-| [`grill-task`](skills/grill-task/SKILL.md) | model-selectable | Clarify tasks and decisions into actionable plans |
-| [`grill`](skills/grill/SKILL.md) | model-selectable | Critically examine an idea, plan, or result without executing it |
+| [`grill-task`](skills/grill-task/SKILL.md) | model-selectable | Clarify tasks and decisions into actionable plan briefs |
+| [`grill`](skills/grill/SKILL.md) | model-selectable | Lightweight critical examination without execution or documentation |
 | [`new-project-guidelines`](skills/new-project-guidelines/SKILL.md) | model-selectable | Apply simple guidelines when starting a new project |
+| [`plan-management`](skills/plan-management/SKILL.md) | model-selectable | Design, coordinate, and validate durable hierarchical plans |
 | [`prompt-design`](skills/prompt-design/SKILL.md) | model-selectable | Create, improve, audit, or structure prompts and briefs |
 | [`parallel-task`](skills/parallel-task/SKILL.md) | manual-only | Delegate independent side tasks or review completed work in multiple modes |
 | [`prototype`](skills/prototype/SKILL.md) | model-selectable | Build a throwaway prototype to answer a design question |

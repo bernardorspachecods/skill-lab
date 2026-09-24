@@ -1,63 +1,47 @@
 ---
 name: grill-task
-description: Clarify tasks and decisions into actionable plans.
+description: Clarify tasks and decisions into actionable plan briefs when scope, questions, decisions, or completion criteria are unclear; do not use for lightweight critique or durable plan maintenance.
 ---
 
-# Plan and stress-test a task
+# Clarify a task
 
-1. Every task and plan must have a clear overarching objective that remains visible throughout planning and execution.
-2. Use the surrounding request as context; do not ask the user to restate it. When working in a repository, read all applicable guidance, then inspect only the documentation and code needed to define the task.
-3. Treat assumptions and questions as costs: investigate assumptions that could cause rework, and resolve safe, reversible details without asking. Ask only when the cost of being wrong is higher than the cost of interrupting the user.
-4. Ask one question at a time. After each answer, reassess whether enough information is available to define the plan. Continue asking questions when necessary; do not impose a fixed limit.
-5. Use the answers to decide whether the request needs a short plan or deeper exploration of a material ambiguity, trade-off, or decision.
+Turn an unclear task or decision into a short, actionable plan brief. Use the
+surrounding request and applicable repository context; do not ask the user to
+repeat information that is already available.
 
-## Keep scope useful
+## Workflow
 
-When an idea is outside the objective:
+1. State the overarching objective.
+2. Resolve safe assumptions and inspect only context that could change the
+   direction.
+3. Ask one question at a time when an unresolved decision could cause rework;
+   reassess after each answer.
+4. Keep the scope useful: exclude unrelated ideas, preserve valuable future
+   ideas separately, and challenge weak assumptions.
+5. Decide whether the task is ready for execution, needs a short brief, or
+   needs a durable hierarchical plan.
 
-1. Say so clearly.
-2. Let the user decide whether to include it.
-3. If it is excluded but worth preserving, record it in the repository's designated future-ideas space.
+For decision questions, use:
 
-## Ask questions
+```text
+**Q<n> — <short title>**: <one decision question>
 
-For decision questions, use this format:
+Recomendo: <the preferred answer and its main trade-off>
+```
 
-  ```text
-  **Q<n> — <short title>**: <one decision question>
+## Output
 
-  Recomendo: <the preferred answer and its main trade-off>
-  ```
-
-When exploring deeply:
-
-- challenge weak assumptions and disagree when there is a grounded reason;
-- propose alternatives and concrete scenarios when they clarify the decision;
-- keep the objective and scope visible;
-- stop exploring once the material decisions are clear; do not reopen settled decisions.
-
-## Short plan
-
-After the necessary clarifying questions are answered, communicate a concise plan containing:
+When clarification is complete, provide:
 
 - the desired outcome and completion criteria;
-- the scope and immediate next steps;
-- only the assumptions, risks, or missing context that could affect execution.
+- scope, non-goals, and immediate next steps;
+- confirmed decisions, assumptions, risks, and open questions; and
+- the boundary between what can proceed and what needs approval.
 
-State the assumptions and stop after the plan. Keep it in the conversation, do not update durable project documentation, and do not execute the task during this flow.
+If a durable or hierarchical plan is required, hand this brief to
+`$plan-management`. Do not define its metadata, plan-tree structure,
+cross-plan dependencies, or durable document format here.
 
-## Documented plan
-
-Use this flow when the task requires a durable plan or contains a material ambiguity, trade-off, or decision that needs deeper exploration.
-
-- Use the repository's designated planning or decision document when one exists.
-- If there is no suitable owner, keep the plan in the conversation and ask before creating a new durable document.
-- Keep the working plan, alternatives, future ideas, and open questions separate from canonical documents during exploration.
-- When the plan is confirmed and the user gives an explicit `go`, update the existing canonical owner immediately before implementation. Do not create a new source of truth.
-- If no durable plan is needed, use the short flow instead.
-
-Do not implement changes during planning or exploration. After the explicit `go`, the planning phase is complete.
-
-## Finish
-
-Finish when the objective, scope, completion criteria, next steps, and any material decisions are clear. Present the plan first, then relevant unchosen possibilities and future ideas. Wait for the user's explicit `go` before implementation.
+Do not implement changes during clarification. For a durable plan or any
+material execution direction, wait for the user's explicit approval before
+implementation.

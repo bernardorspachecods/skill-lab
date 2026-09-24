@@ -11,7 +11,7 @@ Ending a chat does not by itself close a phase or decision.
 ## Capture
 
 Read the applicable repository entrypoints and context guidance. Inspect only
-the relevant documents, code, tests, diffs, and notes. Capture:
+the relevant documents, code, tests, diffs, plans, and notes. Capture:
 
 - objective and scope;
 - current phase and status;
@@ -22,10 +22,15 @@ the relevant documents, code, tests, diffs, and notes. Capture:
 
 ## Reconcile
 
-Route each durable item to its canonical owner:
+Route each durable item to its canonical owner. For an active plan tree, update
+the existing canonical plan using its established structure:
 
 - link the existing source of truth;
 - update its canonical owner when durable information is missing;
+- keep plan objective, output, sequence, dependencies, consumers, and status in
+  the canonical plan rather than duplicating them in handoff notes;
+- invoke the plan-management workflow only when the handoff reveals a
+  structural change, new relationship, or coordination problem;
 - record unresolved or provisional information explicitly as such;
 - omit transient or redundant information.
 
