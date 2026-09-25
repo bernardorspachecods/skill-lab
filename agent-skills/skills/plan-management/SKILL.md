@@ -49,6 +49,9 @@ durable parent plan.
   provisional finding before the coordinator and user have reviewed it.
 - Temporary delegation packets are non-canonical and must be deleted after
   joint review, application of accepted findings, and cleanup verification.
+- A durable plan reaching `status: complete` triggers a closure gate: ask the
+  user whether to delete it or move it to `reference/` as legacy. Until the
+  user chooses, leave it untouched and do not continue or create another plan.
 
 ## Validation boundary
 

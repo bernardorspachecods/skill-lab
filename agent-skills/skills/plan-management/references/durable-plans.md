@@ -112,9 +112,20 @@ back to the relevant parent phase where useful.
   not silently modify unrelated plans.
 - `CURRENT-STATE.json` is only a resume pointer. Do not put plan prose,
   decisions, or a second status narrative there.
-- If a plan has become obsolete, archive or remove it after transferring any
-  still-owned information. Do not leave a compatibility shell that competes
-  with the current plan.
+
+## Completion and closure gate
+
+`status: complete` closes execution, not the plan's lifecycle. Before
+continuing, verify the output, dependencies, consumers, and owned information,
+then ask the user to choose:
+
+- **Delete** the plan, repairing any affected links or metadata.
+- **Archive** it in the relevant `reference/` directory as legacy and remove it
+  from the active plan tree.
+
+Until the user chooses, leave the plan untouched and do not create another
+plan. Use: “O plano `<path>` está concluído. Quer que o apague ou que o mova
+para `<reference-path>/` como referência legada?”
 
 ## Validation boundary
 
@@ -136,5 +147,6 @@ are reported as migration warnings by default; do not rewrite them merely to
 silence the validator.
 
 Finish when the plan tree has one clear owner per fact, every active plan has a
-bounded output and sequence, all required links and dependencies resolve, and
+bounded output and sequence, all required links and dependencies resolve, the
+completion gate has an explicit user disposition for every completed plan, and
 the remaining review items concern content or decisions rather than form.
