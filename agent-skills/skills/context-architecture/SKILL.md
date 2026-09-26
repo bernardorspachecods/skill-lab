@@ -39,7 +39,6 @@ Refactoring the documentation structure is a normal outcome, not a last resort. 
 - Team-maintained `AGENTS.md` files contain repository-specific behavioral rules that do not repeat general skill guidance. They are not general repository indexes or catch-all documents; do not use them for product vision, architecture, current state, plans, or general documentation. Generated, vendor-owned, or tool-regenerated files are exceptions and should be excluded from this contract.
 - `CONTEXT.md` maps and orients its folder. It links to relevant direct destinations and their specific responsibilities.
 - `CURRENT-STATE.json` is an optional machine-readable resume pointer for the same scope as a `CONTEXT.md`. It records only the active plan, its coarse status, and an optional phase; it is not an implementation inventory, decision record, rationale, or place for next-step prose.
-- Prefer `PLAN.md` for the main plan at the repository root and `PLAN_<name>.md` for subsequent plans. Use `research/` for research that is still in use and `reference/` for archived or consultative material.
 
 ## Choosing the granularity
 
