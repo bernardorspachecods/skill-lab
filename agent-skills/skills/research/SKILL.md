@@ -71,10 +71,12 @@ the underlying sources and scope have been checked.
 
 ## Artifact boundaries
 
-Keep three layers distinct: the **reader-facing output** (answer, evidence,
-limitations, and recommendation), the **audit/supporting output** (curated
-claims, evidence, sources, conflicts, and validation), and **working output**
-(queries, candidates, hypotheses, unverified notes, and temporary logs).
+Keep three layers distinct: the **consumer-facing output** (the answer or
+synthesis intended for the next consumer, whether a human, an LLM, or another
+downstream system, including relevant evidence, limitations, and
+recommendations), the **audit/supporting output** (curated claims, evidence,
+sources, conflicts, and validation), and **working output** (queries,
+candidates, hypotheses, unverified notes, and temporary logs).
 Working material is disposable; promote only verified, material findings to
 the audit record and never maintain parallel copies. If files are used, keep
 the three layers in separate locations according to local conventions.
@@ -174,7 +176,7 @@ evidence.
 
 ## Output
 
-Return the reader-facing output first, in proportion to the level:
+Return the consumer-facing output first, in proportion to the level:
 
 1. the conclusion or answer;
 2. the key evidence and citations that support it;
@@ -186,7 +188,7 @@ Return the reader-facing output first, in proportion to the level:
 For standard and high-stakes work, maintain the claim matrix, linked `E#`
 entries, source ledger, and detailed validation in a separate
 audit/supporting output when traceability or persistent review is required.
-Summarize its material conclusions in the reader-facing output; do not
+Summarize its material conclusions in the consumer-facing output; do not
 reproduce its tables or merge the disposable working search record into it.
 
 In lightweight work, provide only the relevant source and date check, material
