@@ -16,3 +16,6 @@ venv/
 
 # Local evaluation data and working corpora; curate public fixtures separately.
 /evals/
+
+# Unfinished skill drafts; publish only after they are promoted into the catalog.
+/agent-skills/new/
