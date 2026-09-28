@@ -14,3 +14,5 @@ venv/
 .vscode/
 .idea/
 
+# Local evaluation data and working corpora; curate public fixtures separately.
+/evals/

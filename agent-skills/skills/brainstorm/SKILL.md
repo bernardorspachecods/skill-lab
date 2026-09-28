@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Guide open-ended conversations where the user wants to explore an idea, compare approaches, or reach a decision or plan through discussion. Do not use for direct execution tasks or simple factual questions.
+description: Guide open-ended conversations where the user wants to explore an idea, compare approaches, reach a decision or plan, or critically examine an idea, decision, plan, or result. Do not use for direct execution tasks or simple factual questions.
 ---
 
 # Brainstorm
@@ -47,6 +47,11 @@ Format: Heuristic (a question to run) → Why → Anchor (one concrete illustrat
 - Heuristic: Before building on a proposal from the human, was it checked for weaknesses? If it held up, was agreement stated plainly, without padded praise or manufactured objections?
 - Why: Models lean toward agreeing with the framing they are given, and in a long session an unexamined premise gets built on for many turns. Reflexive contrarianism is equally empty, so the check has to be real in both directions.
 - Anchor: The human proposes an idea. The reply says which part holds and which part rests on something unverified, instead of applauding. Those objections then shape the scope of everything that follows.
+
+**8. Make the basis of a critique legible**
+- Heuristic: When a judgment depends on uncertain or contested claims, have I made clear what is known, what I infer or prefer, and what remains unknown?
+- Why: A critique can sound more certain than its evidence. Making the basis visible lets the human evaluate the judgment.
+- Anchor: "The logs confirm the delay; I suspect the retry policy caused it, but we haven't checked that yet."
 
 ## Asking questions
 

@@ -5,7 +5,10 @@ description: Conduct rigorous web research matching source quality, evidence, co
 
 # Research
 
-Use only when the user explicitly invokes this skill. Define the question,
+Use when the user explicitly invokes this skill or a durable plan enables
+research for the assigned unit. In simple unplanned work, do not replace this
+workflow with an unstructured search; propose `$research` when a material
+evidence gap appears and wait for explicit invocation. Define the question,
 find and evaluate the best available evidence, and write only what that
 evidence supports.
 
@@ -69,17 +72,70 @@ If evidence is missing, mark the claim `partially supported`, `uncertain`, or
 summaries, a claimed “research gap,” “novelty,” or “consensus” as evidence until
 the underlying sources and scope have been checked.
 
-## Artifact boundaries
+## Identity, artifacts, and handoff
 
-Keep three layers distinct: the **consumer-facing output** (the answer or
-synthesis intended for the next consumer, whether a human, an LLM, or another
-downstream system, including relevant evidence, limitations, and
-recommendations), the **audit/supporting output** (curated claims, evidence,
-sources, conflicts, and validation), and **working output** (queries,
-candidates, hypotheses, unverified notes, and temporary logs).
-Working material is disposable; promote only verified, material findings to
-the audit record and never maintain parallel copies. If files are used, keep
-the three layers in separate locations according to local conventions.
+Each assigned research unit has its own `RES` identity. The coordinator
+declares whether work continues an existing research ID or starts a new
+assignment; deepening the question, checking missing evidence, changing agents,
+or adding sources and artifacts does not by itself create a new ID. The
+assignment mechanism reserves the ID. Do not choose an ID independently or
+create a delegation ID.
+
+The research entity has two artifact roles:
+
+- `<RES-ID>.working` holds disposable discovery material: queries, paths,
+  candidates, hypotheses, unverified notes, and temporary logs.
+- `<RES-ID>.audit` holds the curated, verifiable support: material claims,
+  evidence, sources, provenance, conflicts, limitations, and validation.
+
+When these are files, each declares `belongs_to: <RES-ID>`. The audit artifact
+also records `requested_by: <PLAN-ID-or-subplan-ID>`; this is the canonical
+location for the research assignment's requester metadata, so it is not
+duplicated across artifacts. Use the IDs as canonical relationship references
+and resolve them to current paths for file access. Keep the artifacts with the
+root plan or subplan that requested the research, under that unit's `research/`
+area. Do not create a separate `RESEARCH.md` merely to represent the unit.
+
+Keep three content layers distinct:
+
+- **Working material** is disposable. Promote only verified, material findings
+  into the audit artifact; do not keep parallel copies of the same record.
+- **Audit/supporting material** is the research evidence trail in
+  `<RES-ID>.audit`.
+- **Consumer-facing output** is the answer or synthesis for the next consumer.
+  It is not a third artifact of the `RES` entity.
+
+Choose the consumer-facing destination by the research's use. When findings
+have expected value for future phases, subplans, or tasks, create or update a
+`KNOW` entry; its `derived_from` references the concrete `<RES-ID>.audit`
+artifact. For research supporting only a local subplan decision, put a concise
+synthesis in that subplan `PLAN`'s `Outcome`, with the evidence retained in the
+audit. Do not create `KNOW` solely to store that one-off rationale. When there
+is no durable consumer, return the answer in the conversation. Research itself
+does not create a separate `RESULT` artifact.
+
+### Artifact lifecycle by rigor
+
+| Rigor | Working artifact | Audit artifact | Consumer-facing output |
+|---|---|---|---|
+| Lightweight | Keep discovery checks transient; create no file by default. | Omit a separate audit file unless the result needs traceability or persistent review. | Return the answer in the conversation, or place a local plan decision in `Outcome` when applicable. |
+| Standard | Keep detailed search records temporary; create a working file when the search paths need to be retained during execution. | Create and retain when traceability, persistent review, a durable plan handoff, or reusable `KNOW` provenance requires it; otherwise keep the compact support temporary. | Create or update `KNOW` when findings are reusable; otherwise provide the local `Outcome` or conversational answer. |
+| High-stakes | Keep operational search logs disposable unless needed during active work. | Create and retain a complete audit record, including provenance, dates, conflicts, and validation. | Deliver a bounded, evidence-calibrated answer to the intended consumer, using `KNOW` for reusable findings or the requesting plan's `Outcome` for a local decision. |
+
+The rigor level sets the minimum record. A plan or consumer that requires a
+persistent evidence trail can require an audit artifact at a lower level too.
+Do not persist working logs merely because the audit is retained.
+
+The requesting root plan or subplan is a required input to plan-coordinated
+research, along with its objective, scope, constraints, and applicable
+guidelines. Guidelines are context, not additional research artifacts. A
+delegated researcher follows this skill and continues the same `RES` identity
+and artifacts. The researcher hands the coordinator the artifact IDs and
+resolved locations, consumer-facing output, material conclusions and
+uncertainties, and any unmet requirement. The coordinator checks and reconciles
+the handoff; only then, and after applicable plan dependencies and review or
+integration gates, is the output available downstream. Do not present
+provisional research as a completed plan output.
 
 ## Workflow
 
@@ -186,10 +242,12 @@ Return the consumer-facing output first, in proportion to the level:
    what assumption could change it.
 
 For standard and high-stakes work, maintain the claim matrix, linked `E#`
-entries, source ledger, and detailed validation in a separate
-audit/supporting output when traceability or persistent review is required.
-Summarize its material conclusions in the consumer-facing output; do not
-reproduce its tables or merge the disposable working search record into it.
+entries, source ledger, and detailed validation in `<RES-ID>.audit` when
+traceability, persistent review, or the plan handoff requires it. Summarize
+its material conclusions in the consumer-facing output; do not reproduce its
+tables or merge the disposable working search record into it. When the
+consumer-facing output is a `KNOW` entry, preserve its provenance by linking
+the concrete audit artifact; do not copy the full audit into knowledge.
 
 In lightweight work, provide only the relevant source and date check, material
 uncertainty, and any necessary caveat.

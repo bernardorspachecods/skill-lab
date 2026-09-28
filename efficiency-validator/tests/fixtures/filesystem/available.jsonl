@@ -1,0 +1,2 @@
+{"type":"filesystem.trace.started","schema_version":"filesystem-trace-1","run_id":"run-fs-1","case_id":"case-fs-1","trace_id":"trace-fs-1","source":"macos-fs-usage","authority":"os-kernel-observation","status":"available"}
+{"type":"filesystem.access","run_id":"run-fs-1","case_id":"case-fs-1","trace_id":"trace-fs-1","event_index":1,"timestamp":"2026-09-24T10:00:00.123Z","source":"macos-fs-usage","authority":"os-kernel-observation","evidence_kind":"opened","operation":"open","path":"/staged/docs/rules.md","pid":1234,"process":"codex","bytes":4096}

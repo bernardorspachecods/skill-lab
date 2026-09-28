@@ -1,213 +1,88 @@
 ---
 name: prompt-design
-description: Create, improve, audit, compress, or structure prompts and task briefs for LLMs, agents, coding, research, reviews, or documentation. Use when the user asks how to prompt an LLM; do not use when they want the underlying task executed.
+description: Turn a rough intent into a well-structured prompt for another LLM or agent, or tighten a prompt the user already drafted. Use whenever the user wants to write, structure, review, or shorten a prompt, including agent handoffs, /goal cycles, system prompts, and prompts backed by repos or planning docs, even if they never say "prompt design". Do not use for answering the task itself or for general writing.
 ---
 
 # Prompt Design
 
-Design prompts as task briefs. A good prompt tells the LLM what to do, what context matters, what rules to obey, what uncertainty to preserve, how to verify, and what to return.
+Help the user turn what they want into a prompt another LLM or agent can act on. The main input is a rough intent ("I need an agent to work through the migration plan"). The secondary input is an existing draft to tighten. Each principle below is a test to run on your own output. The Why is what lets you apply it to situations not listed here.
 
-Use the smallest prompt that makes correct behavior likely.
+If a situation matches none of the principles, name the mechanism at play (duplication of a source, drift between prompt and source, reader missing context, critical instruction buried) and apply the fix tied to that mechanism.
 
-## Clarification Rule
+## The core test
 
-If the user's goal is unclear, stop and ask one concise question before writing the prompt.
+Run this on every section of the anatomy before including it:
 
-Ask when:
+> Does an authoritative source already cover this? If yes, omit it, unless missing it would be costly and easy to overlook, in which case keep it as a one-liner.
 
-- the target task is ambiguous;
-- the intended user, model, agent, or environment materially changes the prompt;
-- the output format matters but is unspecified;
-- there are multiple valid prompt directions with different tradeoffs;
-- the prompt could trigger risky, destructive, private, legal, financial, medical, or high-impact work;
-- required context is missing and cannot be safely inferred.
+Why: the user's prompts are often backed by repos and planning docs. Restating that material in the prompt duplicates it, and the two copies drift apart. But a few lines (stop conditions especially) are worth repeating even when the plan says the same thing, because a long document is easy to skim past and a miss costs a lot. The test gives one rule that yields a short prompt when sources are rich and a full one when they are absent.
 
-Do not ask when:
+## Anatomy
 
-- the missing detail is minor;
-- a safe default is obvious;
-- the user clearly wants a draft;
-- placeholders are acceptable.
+Use only the sections that pass the core test. Keep this order, with the immediate request last so the reader ends on the task.
 
-If clarification is needed, return only:
+- **Objective**: the longer-term goal this work serves. Include when the immediate request alone would lose the purpose.
+- **Context**: background the reader lacks (situation, constraints of the world, why now). Include when Sources don't carry it. With no Sources, this section does the most work: ask for or include the excerpts the reader needs, and treat them as data (principle 4).
+- **Sources**: where the reader should look. Give the path, what it is authoritative for, and what wins when sources disagree: the plan wins on intent and scope, the code wins on current behavior, and the reader surfaces a mismatch instead of silently resolving it, unless the user says otherwise.
+- **Rules**: hard constraints, each with its reason (principle 2).
+- **Preferences**: soft leanings, and what to do when they conflict with something else. Rules are must; preferences are lean.
+- **Examples**: only when a format or tone is hard to describe (principle 5).
+- **History**: what was already tried, decided, or ruled out, so the reader doesn't re-litigate it. Background belongs in Context; this is only past decisions.
+- **Ask before**: actions or decisions where the reader should stop and check with the human. Includes stop conditions.
+- **Process**: order of work. Include only when order matters or the reader's default approach would be wrong.
+- **Verify by**: how the reader and the human will know the work is done and correct. Prefer concrete checks (a test passes, a file exists) over "make sure it's good".
+- **Output format**: shape, length, and where the result goes.
+- **Immediate request**: this turn's task, in one or two sentences.
 
-```text
-Question:
-[one concise question]
+## Light mode
 
-Why it matters:
-[one sentence]
-```
+Light mode is not a separate template. It is what the core test produces when an authoritative plan already holds the objective, context, process, and output.
 
-## Core Workflow
+Keep only:
+- **Sources**: name the plan and follow the Sources entry in the Anatomy. Add that the guardrails below are a floor: they sit on top of the plan and never compete with it.
+- **Ask before / stop conditions**: a few high-stakes lines, repeated on purpose. Autonomous cycles tend to fail the same ways, so the defaults target those: silent scope growth (stop if the scope needs to change, do not expand beyond the plan) and guessing past ambiguity (stop if a decision needs clarifying). Adjust per task using principle 3, and let the user's own standing guardrails take precedence.
+- **Immediate request**.
+- **Verify by** only if the plan's definition of done is vague.
 
-1. Identify the prompt's route: quick answer, software change, code review, app revamp, research synthesis, long-document analysis, feature evaluation, documentation, or human decision.
-2. Decide the minimum useful context.
-3. Separate hard rules from preferences.
-4. Add examples only when they clarify output shape or boundary behavior.
-5. Add verification expectations when correctness matters.
-6. Add "ask before" rules for risky or ambiguous decisions.
-7. Remove sections that do not help the task.
-8. Return a ready-to-use prompt plus short usage notes when helpful.
+## Principles
 
-## Documentation-Backed Prompts
+Format: Heuristic (a question to run) → Why → Anchor (one concrete illustration)
 
-When a repository or workspace already has authoritative instructions, plans,
-or domain documentation, treat the prompt as a routing brief rather than a copy
-of those sources.
+**1. Write for the reader who cannot see this conversation**
+- Heuristic: Does the prompt name what the reader has access to (repo, tools, files) and lack (everything discussed here)?
+- Why: Context that felt obvious during the discussion is absent for the reader. The gap only shows up as bad output.
+- Anchor: The user says "use the approach we settled on." The prompt states the approach in a line, or points to where it is written.
 
-- Point to the smallest required source set and require it to be read first.
-- Put durable detail in the repository documentation, not repeatedly in prompts.
-- Include only the delta: current objective, newly approved decisions, scope,
-  immediate request, stop/ask boundary, and observable definition of done.
-- Do not repeat rules already owned by `AGENTS.md`, a current plan, or domain and
-  operations documents.
-- Inline a rule from documentation only when it is unusually high-risk,
-  currently disputed, inaccessible to the target agent, or essential to
-  interpreting the immediate request.
-- If sources conflict, require the agent to stop and report the conflict instead
-  of silently choosing one.
-- Prefer one current plan over several overlapping or historical trackers.
+**2. Give the reason behind each rule**
+- Heuristic: Could the reader apply this rule correctly to a case it doesn't mention?
+- Why: A bare rule gets followed literally or dropped at the edges. A rule with its reason generalizes.
+- Anchor: "Don't touch the public API, because external clients pin to it," not "Don't touch the public API."
 
-For `/goal` and other long-running agent prompts, be especially strict: the goal
-should say what outcome to pursue and when human input is required, while the
-linked plan owns the workflow and technical detail. Before returning a prompt,
-remove every paragraph that merely restates an accessible source. Robustness
-comes from clear ownership and verification, not prompt length.
+**3. Name the likely failure**
+- Heuristic: Is it clear what would go wrong if the reader misreads this, and is that failure guarded against?
+- Why: Guardrails placed by imagining the specific failure are targeted. Guardrails added by habit are noise.
+- Anchor: A prompt for a long autonomous run guards against silent scope growth. A one-shot summary prompt doesn't need that guardrail.
 
-## Prompt Anatomy
+**4. Separate instructions from data**
+- Heuristic: Is anything pasted (logs, docs, code) clearly delimited from the instructions?
+- Why: When data and instructions blur, the reader may follow text inside the data as if it were a command.
+- Anchor: Wrap pasted material in tags such as `<log>...</log>` and say what it is.
 
-Use only the sections that matter:
+**5. Use examples sparingly**
+- Heuristic: Would a sentence describe this as well as an example would? If an example is needed, could the reader over-copy it?
+- Why: Examples anchor hard. One example gets imitated closely, including its incidental details.
+- Anchor: Two examples that differ in obvious ways, labeled "illustrations of the format, not templates."
 
-```text
-Objective:
-Context:
-Sources:
-Rules:
-Preferences:
-Examples:
-History:
-Ask before:
-Process:
-Verify by:
-Output format:
-Immediate request:
-```
+## Modes of input
 
-## Behavior Rules
+Rough intent: draft the prompt directly. Existing draft: run the core test on it, flag contradictions with its sources, and say briefly what changed and why.
 
-Do:
+## Asking questions
 
-- make the objective concrete;
-- tell the LLM what context to read and what to ignore;
-- label sources, rules, preferences, examples, history, assumptions, and open questions;
-- include confidence discipline for factual work;
-- require source grounding for research, legal-ish, technical, or documentation-heavy work;
-- include verification for code, data, claims, UI, or high-risk output;
-- keep humans as decision-makers for product, architecture, irreversible, or high-impact choices;
-- make output structure easy to review or reuse.
+Default to proceeding with a stated assumption. Save a question for the case where a wrong guess would change the prompt's whole shape. The most common one: whether an authoritative plan or docs exist and what the reader can access, because that decides light or full. When a question is needed, ask one, the one that is actually blocking.
 
-Do not:
+## Output
 
-- create a giant prompt by default;
-- duplicate accessible project documentation inside the prompt;
-- use "be comprehensive" without saying what matters;
-- ask the LLM to use all context blindly;
-- let the model silently choose product or architecture direction;
-- mix examples with requirements;
-- ask for long reasoning traces when the user only needs a usable prompt;
-- hide uncertainty or missing evidence.
+Deliver the finished prompt in a single fenced code block, ready to paste. Omitted sections are simply absent, with no "N/A" placeholders. Short prompts can be prose or a few lines; use section headers only when the prompt is long enough to need them.
 
-## Common Prompt Patterns
-
-### Software Change
-
-Include:
-
-- goal;
-- user-facing behavior;
-- relevant files or search instructions;
-- existing behavior to preserve;
-- constraints;
-- test/build/verification command if known;
-- definition of done;
-- ask-before rules for data model, public API, architecture, or scope changes.
-
-For repo continuation prompts:
-
-- split sources into required-first and conditional-if-touched;
-- define done as observable UI/API behavior, not just intent;
-- if identifiers/contracts are missing, require options and approval before changing API, schema, permissions, or navigation.
-
-### Code Review
-
-Require findings first. Each finding should include severity, file/line, problem, impact, and suggested fix.
-
-Tell the model to prioritize correctness, security/privacy, data loss, user-facing regressions, performance with real impact, and maintainability likely to cause defects.
-
-### App Revamp
-
-Tell the model to map the current app before changing it:
-
-- routes/screens;
-- core flows;
-- data/API dependencies;
-- broken workflows;
-- features to preserve;
-- first safe change;
-- screenshots or smoke checks when UI is involved.
-
-### Research / Second Brain
-
-Use source-to-synthesis discipline:
-
-1. source index;
-2. source notes;
-3. claim cards;
-4. open questions;
-5. synthesis.
-
-Do not let the model jump from raw source to final conclusions.
-
-### Long Document Analysis
-
-Tell the model to map the document first, identify relevant sections, extract notes with section/page/URL locators, synthesize only after extraction, and flag unread sections that may matter.
-
-### Documentation
-
-Include:
-
-- audience;
-- reader goal;
-- source of truth;
-- maintenance expectation;
-- examples to preserve;
-- assumptions and open questions.
-
-## Output Format
-
-Default output:
-
-```markdown
-## Prompt
-
-[ready-to-use prompt]
-
-## Why This Works
-
-- [short reason]
-- [short reason]
-
-## Optional Adjustments
-
-- [only if useful]
-```
-
-If the user asks only for the prompt, return only the prompt.
-
-## Reference Guidance
-
-This skill is derived from the local LLM Field Manual. When deeper guidance is needed and available, read:
-
-- `references/prompt-guidance.md` for route-specific prompt patterns.
-- `references/failure-modes.md` for common bad prompt behavior.
+After the block, add at most a few lines: assumptions made, and one line on what was left out because a source covers it. Do not walk through the anatomy.

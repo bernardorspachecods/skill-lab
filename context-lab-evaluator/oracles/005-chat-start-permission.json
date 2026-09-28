@@ -1,0 +1,39 @@
+{
+  "case_id": "005-chat-start-permission",
+  "authoritative_paths": [
+    "docs/product/rules.md",
+    "docs/decisions/0001-workspace-ownership.md",
+    "docs/architecture/system-boundaries.md"
+  ],
+  "implementation_paths": [
+    "packages/core/src/context_lab_core/models.py",
+    "packages/core/src/context_lab_core/services.py",
+    "packages/storage/src/context_lab_storage/sqlite.py"
+  ],
+  "supporting_tests": [
+    "packages/core/tests/test_task_service.py",
+    "packages/storage/tests/test_sqlite.py"
+  ],
+  "required_claims": [
+    {
+      "id": "project-has-one-workspace",
+      "description": "A project belongs to exactly one workspace in the current model."
+    },
+    {
+      "id": "proposal-conflicts-with-decision",
+      "description": "The proposal conflicts with the accepted ownership decision."
+    },
+    {
+      "id": "sharing-changes-permissions-and-persistence",
+      "description": "Supporting the proposal would change permission and persistence assumptions."
+    },
+    {
+      "id": "current-versus-future-separated",
+      "description": "The answer separates current support from a recommended future design."
+    }
+  ],
+  "disallowed_claims": [
+    "the proposal is already supported",
+    "one exact future file list is required"
+  ]
+}

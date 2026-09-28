@@ -1,66 +1,243 @@
 ---
 name: plan-management
 description: >
-  Design, restructure, coordinate, and validate durable hierarchical plans and
-  temporary delegation execution plans. Use after task clarification when
-  creating a plan, changing plan structure, or coordinating a structured
-  delegation.
+  Turn an agreed objective into a clear, actionable plan, from a short plan in
+  conversation to a durable plan with coordinated work. Use when the user asks
+  to plan, structure, or revise work; use brainstorm to explore ideas and
+  options before committing to a plan.
 ---
 
-`grill-task` owns clarification and short plan briefs; `context-architecture`
-owns context maps, document placement, and `CURRENT-STATE.json`.
+# Plan management
 
-## Core contract
+Turn an agreed objective into work that can be carried out and completed. Use
+the same planning principles for a short plan in conversation and a plan that
+must persist in a repository. Match the amount of structure and documentation
+to the work; review, research, and delegation are optional workflows, not
+requirements for making a plan.
 
-Plan management has two related but distinct contracts:
+Use `$brainstorm` when the user wants to explore an open question, compare
+approaches, or reach a decision through discussion. Use this skill when the
+user wants to turn an objective or an agreed direction into actionable work.
+Resolve ordinary planning details as part of planning; do not route routine
+clarification or short plans to another planning skill.
 
-- a **durable plan** defines canonical work in the repository's plan tree;
-- a **temporary delegation plan** defines one structured parallel execution and
-  its review packet.
+`context-architecture` owns repository context maps and `CURRENT-STATE.json`.
+This skill owns durable plan structure and the organization of plan artifacts.
 
-Plans and delegations are different artifacts. A plan defines what must be
-done, evaluated, or produced. A delegation produces temporary findings and a
-review; it must not turn those findings into plan prose or make delegated
-agents co-edit the plan.
+## Planning contract
 
-Choose the applicable contract and read only its reference:
+A plan states what outcome is intended, the boundaries of the work, the work
+needed to reach it, and how completion will be recognized. A plan may remain in
+the conversation when it needs no durable coordination. Use a repository plan
+when ownership, dependencies, phases, durable status, or shared handoffs need
+to persist beyond the conversation.
 
-- For a root plan, subplan, plan revision, or durable execution update, read
-  [durable plans](references/durable-plans.md).
-- For a structured `medium`, `full`, or `review` delegation from
-  `parallel-task`, read
-  [temporary delegation plans](references/temporary-delegation-plans.md).
+Keep the plan as concise as the work allows. Do not add phases, subplans,
+research, review, delegation, or deliverables without a concrete need. Do not
+create a parallel tracker when a canonical plan already owns the work.
 
-Read both only when the delegation also creates or structurally changes its
-durable parent plan.
+## Creating or revising a plan
 
-## Shared coordination rules
+1. Establish the objective and resolve any decision that would materially
+   change the plan. Use the user's agreed direction as the basis; do not reopen
+   settled decisions without a reason.
+2. Decide whether the plan needs to persist or coordinate multiple units. Keep
+   a short, self-contained plan in the conversation. Create or update a
+   repository plan when persistent ownership, dependencies, phases, status, or
+   handoffs are needed.
+3. Identify the owner, scope, inputs, intended output, necessary steps, and
+   completion condition. Split work into phases or subplans only when separate
+   ownership, dependencies, or lifecycle make the split useful.
+4. Record relationships and status in structured metadata when the plan is
+   durable. Keep the body focused on the work and avoid repeating metadata or
+   referenced material.
+5. Update affected parent and child plans, dependencies, consumers, and status
+   together when work is materially re-scoped or reorganized.
+6. Validate durable plan structure and references with the repository's plan
+   validator. Review substantive questions—such as whether the objective and
+   deliverable are right—separately; a structural validator cannot decide them.
 
-- Resolve ownership before writing. Do not create a parallel tracker because a
-  canonical plan is inconvenient.
-- A temporary delegation may reference a durable parent plan and phase, but it
-  never becomes a node in that plan tree automatically.
-- Only the coordinator creates or updates the temporary execution plan. Each
-  delegated agent receives one reserved findings file and edits only that file.
-- The coordinator owns the temporary `review.md`, conducts the joint review
-  with the user, and applies accepted findings to the named canonical
-  consumer.
-- Do not update canonical plans, documentation, or product files from a
-  provisional finding before the coordinator and user have reviewed it.
-- Temporary delegation packets are non-canonical and must be deleted after
-  joint review, application of accepted findings, and cleanup verification.
-- A durable plan reaching `status: complete` triggers a closure gate: ask the
-  user whether to delete it or move it to `reference/` as legacy. Until the
-  user chooses, leave it untouched and do not continue or create another plan.
+## Durable plan identities and references
 
-## Validation boundary
+A durable plan is organized around root and subplan entities:
 
-Use the validator named by the selected reference. Validators can check
-structure, metadata, links, and relationships; they cannot decide whether an
-objective is strategically correct or whether an output is substantively
-valuable. Report those as human review items instead of disguising them as
-structural failures.
+- A root plan entity has an ID such as `LR-01`; its plan artifact is
+  `LR-01.PLAN`.
+- A subplan entity has an ID such as `LR-01.SP-03`; its plan artifact is
+  `LR-01.SP-03.PLAN`.
+- Artifact IDs extend the entity ID with the artifact role. Type codes and
+  canonical artifact roles use uppercase; descriptive artifact roles use
+  lowercase.
+- The tool assigns and reserves the next available number; agents do not
+  choose numbers. Root plan IDs use a repository-wide sequence. Subplan IDs
+  share a sequence within their root. Ordinals have at least two digits, with
+  a leading zero when needed. Removed IDs are never reused.
+- Relationships use stable IDs, not paths. Use `ID#anchor` to refer to a
+  section. A generated map resolves IDs to current paths and validates IDs and
+  anchors; do not maintain a second manual path registry.
 
-Finish when the selected contract is satisfied, the remaining review items
-concern content or decisions rather than form, and—if the run was temporary—
-the packet has been reviewed, applied, and cleaned up.
+## Durable plan metadata
+
+Every root and subplan `PLAN` uses YAML frontmatter with these base fields:
+
+```yaml
+---
+plan_id: LR-01.SP-03
+kind: subplan
+parent: LR-01
+phase: S2
+status: in_progress
+depends_on: [LR-01.SP-02.RESULT]
+consumers: []
+execution_exception:
+  review: true
+---
+```
+
+A root uses `kind: root`, `parent: null`, and `phase: root`. It also declares
+`execution`, with three independent dimensions: `research`, `review`, and
+`delegation`. Their valid values and configurations belong to their owner skills:
+`research` defines research; `agent-delegation` defines review and delegation.
+Plan management records the selected values without maintaining a competing
+list of modes.
+
+Subplans inherit the root's `execution` defaults. A subplan may declare
+`execution_exception` with only the dimensions that differ. An exception may
+disable a dimension or enable it with a value defined by its owning skill,
+even when the root disabled that dimension. Omit `execution_exception` when
+there is no local override.
+
+Field meanings:
+
+- `plan_id`: the plan entity's assigned ID.
+- `kind`: `root` or `subplan`.
+- `parent`: `null` for a root; the parent plan entity ID for a subplan.
+- `phase`: `root` for a root; the parent's phase identifier for a subplan.
+- `status`: `not_started`, `in_progress`, `blocked`, or `complete`.
+- `depends_on`: IDs of outputs that condition this unit's advancement. It is
+  not a general-purpose list of inputs or provenance.
+- `consumers`: destinations outside the plan graph; use an empty list when
+  there are none. Consumers within the graph declare dependencies on relevant
+  outputs in their own `depends_on` field.
+- `execution`: required on the root only; the three workflow dimensions above.
+- `execution_exception`: optional on a subplan; local deviations from the
+  root's defaults.
+
+Do not add `consumes` or `produces`. `depends_on` records advancement
+conditions, `belongs_to` associates an artifact with its entity, and
+`derived_from` records content provenance. Do not copy plan frontmatter to
+other artifact types; their required fields depend on their type and owning
+workflow.
+
+## Durable plan content
+
+The root `PLAN` maps the overall effort. Its body states the overall objective,
+approach and boundaries, current phase, a concise ordered phase map linked to
+its subplans, and the global completion gate. Detailed phase objectives,
+scopes, inputs, outputs, and completion conditions belong to the relevant
+subplans. The root may state cross-phase constraints, but should not repeat
+each subplan's execution brief.
+
+A subplan `PLAN` is the executable brief for one bounded task. It defines the
+task objective and scope, relevant inputs, expected output, and completion
+condition. Refer to inputs by ID. Do not redefine the root objective or repeat
+the root plan. Record advancement conditions in `depends_on`; mention other
+relevant inputs in the brief without implying that they are gates.
+
+Record completion, verification, and material differences from the brief in a
+short `Outcome` section of the subplan `PLAN`. Do not repeat the objective or
+completion conditions there. Create a separate `RESULT` artifact only when the
+task requires a standalone, consumer-facing deliverable that should be
+consultable as its own artifact. Implementation work alone does not require a
+separate `RESULT`.
+
+## Workflow and artifact relationships
+
+Research, review, and knowledge artifacts declare only the relationships
+relevant to their type. Associated artifacts use `belongs_to`. Research and
+review identify the requesting root or subplan with `requested_by`; review
+assignments also declare their concrete `targets` and `criteria_refs`.
+Knowledge records the concrete source artifacts in `derived_from`. The owning
+skills define those artifacts' internal content and lifecycle.
+
+Use `depends_on` only for a condition that must be satisfied before a unit
+advances. When a unit must wait for an output, reference that output ID there.
+This dependency does not by itself mean that the output is ready for use.
+
+An output becomes available to consumers after its producing unit is complete,
+the coordinator has received and reconciled the result, and applicable
+dependency, review, or integration gates are satisfied. A file's existence or
+a provisional result does not unlock downstream work. The plan cycle controls
+output availability; do not create a parallel artifact state machine.
+
+Plan management sets review and delegation defaults and local exceptions and
+coordinates plan gates. `agent-delegation` executes review and delegation and
+defines their procedures and temporary packets. When review follows execution,
+the executor first completes and reconciles the result; the target remains
+stable during evaluation. Delegation changes who performs work, not the
+identity of the plan unit or its artifacts.
+
+For durable plans, keep artifacts beside the unit that coordinates them. Root
+plan artifacts live in the root plan directory; artifacts specific to a
+subplan live in that subplan's directory. A typical layout is:
+
+```text
+<plan>/
+├── PLAN.md
+├── research/
+├── reviews/
+├── knowledge/
+└── subplans/
+    └── <subplan>/
+        ├── PLAN.md
+        ├── RESULT.md       # only for a required standalone deliverable
+        ├── research/
+        ├── reviews/
+        └── knowledge/
+```
+
+Create directories only when needed. Consumers refer to shared artifacts by
+ID; do not copy an artifact into the consumer's directory or change its
+membership to the producing entity.
+
+## Status and blocked work
+
+Use only `not_started`, `in_progress`, `blocked`, and `complete` for durable
+plan units. Requirements agreed in the plan are mandatory. Resolve minor
+issues autonomously within the approved scope.
+
+`blocked` is a pause while awaiting a user decision, not a final state or a way
+to accept incomplete work. If a requirement cannot be met within the approved
+scope, or progress requires changing that scope, stop and explain the affected
+requirement and blocker to the user. Do not bypass or omit the requirement or
+report incomplete work as complete. After the user's decision, update the plan
+when needed and resume as `in_progress`.
+
+`complete` means the unit's work has ended. It does not by itself make outputs
+available; the output availability conditions above still apply.
+
+## Closing a completed plan
+
+When a durable plan reaches `status: complete`, verify its outputs,
+dependencies, consumers, and owned information. Then ask the user whether to
+delete the plan or move it to the relevant `reference/` directory as legacy.
+Until the user chooses, leave the plan in place and do not continue it or create
+another plan in its place.
+
+## Validation
+
+Use the plan validator provided by the repository. It can check structural
+requirements, IDs, references, and relationships supported by its
+implementation. It cannot decide whether an objective is strategically sound,
+an output is substantively correct, or trade-offs are acceptable; review those
+as human questions.
+
+For the agent-skills repository, the current validator command is:
+
+```bash
+python3 skills/plan-management/scripts/validate_plans.py <repository>
+```
+
+Use strict validation when a repository is adopting the contract or selected
+plans are expected to comply already. Treat existing plans without the required
+metadata as migration work; do not rewrite them merely to silence a warning.

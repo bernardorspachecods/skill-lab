@@ -1,0 +1,33 @@
+from typing import Protocol
+
+from .models import Membership, Notification, Project, Task, Workspace
+
+
+class WorkspaceStore(Protocol):
+    def get(self, workspace_id: str) -> Workspace | None: ...
+
+
+class MembershipStore(Protocol):
+    def get(self, workspace_id: str, user_id: str) -> Membership | None: ...
+
+    def save(self, membership: Membership) -> None: ...
+
+
+class ProjectStore(Protocol):
+    def get(self, project_id: str) -> Project | None: ...
+
+    def save(self, project: Project) -> None: ...
+
+
+class TaskStore(Protocol):
+    def get(self, task_id: str) -> Task | None: ...
+
+    def save(self, task: Task) -> None: ...
+
+
+class NotificationStore(Protocol):
+    def save(self, notification: Notification) -> None: ...
+
+    def pending(self) -> list[Notification]: ...
+
+    def mark_delivered(self, notification_id: str) -> None: ...

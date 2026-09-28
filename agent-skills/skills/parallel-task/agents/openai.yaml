@@ -1,6 +1,0 @@
-interface:
-  display_name: "Parallel Task"
-  short_description: "Delegate independent work or reviews"
-  default_prompt: "Use $parallel-task in review mode for completed-task reviews, medium mode for bounded side tasks, light mode only when explicitly requested, and full mode only when explicitly requested."
-policy:
-  allow_implicit_invocation: false
