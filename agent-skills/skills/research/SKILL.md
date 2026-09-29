@@ -53,25 +53,6 @@ does not replace the claim/evidence rules below. Use only the stages the task
 needs, and keep the original paper and extracted evidence available to every
 later stage.
 
-Evidence must fit the claim:
-
-- current fact → direct authority or primary record matching the relevant
-  version, dates, and asserted period;
-- comparison → documentation for each capability plus independent evidence
-  for superiority, performance, safety, ease, reliability, or cost;
-- causal or quantitative claim → original study, dataset, measurement, or
-  method with its conditions, uncertainty, and limitations; do not generalize
-  beyond its design;
-- recommendation → explicit requirements, viable alternatives, trade-offs,
-  evidence of fit, and relevant operational costs. Prefer the least complex
-  option that satisfies the requirements; do not add operational burden
-  without evidence. A recommendation is an inference, not a fact.
-
-If evidence is missing, mark the claim `partially supported`, `uncertain`, or
-`no adequate evidence`, then weaken or remove it. Do not treat generated
-summaries, a claimed “research gap,” “novelty,” or “consensus” as evidence until
-the underlying sources and scope have been checked.
-
 ## Identity, artifacts, and handoff
 
 Each assigned research unit has its own `RES` identity. The coordinator
@@ -98,6 +79,15 @@ and resolve them to current paths for file access. Keep the artifacts with the
 root plan or subplan that requested the research, under that unit's `research/`
 area. Do not create a separate `RESEARCH.md` merely to represent the unit.
 
+For plan-coordinated research, follow the requesting unit's effective
+`research_working` setting: the root's `execution.research_working` value or a
+subplan's `execution_exception.research_working` override. When it is `true`,
+use the scaffolded file for discovery material that should persist. When it is
+`false`, keep discovery material transient and do not create a plan-local
+`.working` file. This setting controls persistence of the working artifact; it
+does not prevent temporary notes needed during active research. Older plans
+without this field follow the rigor-level lifecycle below.
+
 Keep three content layers distinct:
 
 - **Working material** is disposable. Promote only verified, material findings
@@ -120,15 +110,16 @@ does not create a separate `RESULT` artifact.
 
 | Rigor | Working artifact | Audit artifact | Consumer-facing output |
 |---|---|---|---|
-| Lightweight | Keep discovery checks transient; create no file by default. | Omit for a conversational answer. Create and retain when a durable `KNOW` or plan `Outcome` needs the supporting evidence, or traceability/persistent review requires it. | Return the answer in the conversation, or place a local plan decision in `Outcome` when applicable. Create or update `KNOW` when findings are reusable. |
-| Standard | Keep detailed search records temporary; create a working file when the search paths need to be retained during execution. | Create and retain when traceability, persistent review, a durable plan handoff, or reusable `KNOW` provenance requires it; otherwise keep compact support temporary only when no durable output relies on it. | Create or update `KNOW` when findings are reusable; otherwise provide the local `Outcome` or conversational answer. |
-| High-stakes | Keep operational search logs disposable unless needed during active work. | Create and retain a complete audit record, including provenance, dates, conflicts, and validation. | Deliver a bounded, evidence-calibrated answer to the intended consumer, using `KNOW` for reusable findings or the requesting plan's `Outcome` for a local decision. |
+| Lightweight | Keep discovery checks transient; create no file by default. In a plan, retain a working file only when its effective `research_working` setting is `true`. | Omit for a conversational answer. Create and retain when a durable `KNOW` or plan `Outcome` needs the supporting evidence, or traceability/persistent review requires it. | Return the answer in the conversation, or place a local plan decision in `Outcome` when applicable. Create or update `KNOW` when findings are reusable. |
+| Standard | Keep detailed search records temporary. In a plan, retain a working file only when its effective `research_working` setting is `true`; otherwise keep search paths temporary. | Create and retain when traceability, persistent review, a durable plan handoff, or reusable `KNOW` provenance requires it; otherwise keep compact support temporary only when no durable output relies on it. | Create or update `KNOW` when findings are reusable; otherwise provide the local `Outcome` or conversational answer. |
+| High-stakes | Keep operational search logs disposable unless needed during active work. In a plan, retain a working file only when its effective `research_working` setting is `true`. | Create and retain a complete audit record, including provenance, dates, conflicts, and validation. | Deliver a bounded, evidence-calibrated answer to the intended consumer, using `KNOW` for reusable findings or the requesting plan's `Outcome` for a local decision. |
 
 The rigor level sets the minimum record. Whenever research findings are written
 to a durable `KNOW` entry or a requesting plan's `Outcome`, create and retain
 `<RES-ID>.audit` so the output has a concrete, resolvable evidence source. A
 plan or consumer may require an audit artifact at a lower rigor level as well.
-Do not persist working logs merely because the audit is retained.
+Do not persist working logs merely because the audit is retained; for a plan,
+persist them only when the effective `research_working` setting is `true`.
 
 The requesting root plan or subplan is a required input to plan-coordinated
 research, along with its objective, scope, constraints, and applicable

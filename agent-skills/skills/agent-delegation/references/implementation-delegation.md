@@ -25,13 +25,15 @@ canonical relationship references.
 
 ## Execution
 
-1. Confirm that the requested implementation is within the user's request or
-   the plan's approved scope. If completing it requires a scope change, stop
-   and consult the user before assigning that change.
-2. Select one agent for one bounded assignment by default. Split work across
-   agents only when the outputs and write boundaries are independent. Keep
-   shared files under one writer and have the primary agent reconcile shared
-   changes.
+1. Confirm that the requested implementation is within the user's request and,
+   when applicable, the plan's approved scope. If completing it requires a
+   scope change, stop and consult the user before assigning that change.
+2. Follow the approved plan's assignment structure when it specifies one. If
+   there is no plan, or the plan leaves the agent count unspecified, ask the
+   user how many agents they want before assigning the work; do not default to
+   one. Split work across agents only when their outputs and write boundaries
+   are independent. Keep shared files under one writer and have the primary
+   agent reconcile shared changes.
 3. Give the agent authority to implement only the named work and edit only its
    assigned files. It may resolve minor issues within the approved scope. It
    must surface unmet requirements, material ambiguities, and scope changes

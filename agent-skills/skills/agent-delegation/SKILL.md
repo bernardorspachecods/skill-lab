@@ -10,7 +10,7 @@ description: >
 
 Delegate a clearly bounded assignment to one or more agents and coordinate the
 handoff. Use the current conversation and plan as context; do not ask the user
-to repeat information already available.
+to repeat information already available. If delegation is unavailable, say so; do not imply it occurred.
 
 ## Choose the assignment
 
@@ -29,32 +29,17 @@ review to modify the same target at the same time.
 
 ## Shared delegation rules
 
-- Keep every assignment within the user's request or the enabled plan scope.
-  A clear request to delegate or a plan's execution setting authorizes that
-  work; do not create an extra approval step for the same scope. If delegation
-  is only a suggestion, ask before launching agents.
-- Use the smallest sufficient assignment and context. State the question or
-  objective, expected output, relevant inputs, constraints, and the boundary
-  of the agent's authority.
-- Lightweight delegation is the default. Use multiple agents, extra
-  coordination artifacts, or staged handoffs only when the task needs
-  independent perspectives, distinct ownership, durable coordination, or
-  another concrete control.
-- Preserve independence when independent perspectives are requested. Give
-  agents the same objective, criteria, and relevant context; assign distinct
-  lenses only when useful. Keep their initial assignments and findings hidden
-  from one another until each submits an independent first response. Share
-  findings afterward when synthesis or coordination requires it. Do not apply
-  this isolation to implementation work that depends on collaboration.
+
+- Use the smallest sufficient assignment and context. 
+- Preserve independence when independent perspectives are requested.
 - Keep parallel work genuinely independent. Assign non-overlapping write
-  boundaries when agents edit files; coordinate shared files through the
-  primary agent.
+  boundaries when agents edit files
 - Delegation does not create a shared-model entity or a new identity for the
   work. The delegated agent continues the same plan unit and artifacts. Do not
   create `DEL-*` IDs or maintain an agent history in the artifact graph.
 - Monitor delegated work to its handoff. Treat silence from a running agent as
   pending; stop for an explicit error, timeout, blocked state, or user
-  instruction. If delegation is unavailable, say so; do not imply it occurred.
+  instruction. 
 - The primary agent remains responsible for checking the handoff against the
   assignment, evidence, and applicable completion criteria. Reconcile results
   into the canonical task or plan within the authorized scope. Report
@@ -67,19 +52,53 @@ review to modify the same target at the same time.
 
 ## Durable plan settings
 
-For a durable plan, `execution.review` and `execution.delegation` are
-independent booleans. `review: true` requires a review gate for the applicable
-unit; `review: false` disables that gate. `delegation: true` permits bounded
-implementation or advisory work in the plan's scope to be assigned to agents;
-`delegation: false` keeps that work with the primary executor. A review may
-still use an independent reviewer when `review` is enabled, regardless of the
-implementation-delegation setting.
+For a durable plan, `execution.research`, `execution.review`, and
+`execution.delegation` are independent settings. `research` selects whether
+and at what level to conduct research; when enabled, assign the research work
+to a researcher. `review: true` requires a review gate for the applicable
+unit; `review: false` disables that gate. Assign enabled review to an
+independent reviewer, whether or not implementation delegation is enabled.
+`delegation: true` assigns bounded implementation work to agents;
+`delegation: false` keeps implementation with the primary executor.
 
-Subplan exceptions use the same boolean values and override only the named
-dimension. If a request conflicts with the plan's setting or scope, stop and
-reconcile the plan before proceeding. These settings govern durable plan work;
-an explicit standalone user request to delegate is sufficient authorization
-for that assignment.
+For durable plans with subplans, the primary agent coordinates the plan with
+the user. If delegation is enabled, the primary agent does not implement the
+subplans; assign each subplan's implementation to an agent. For each subplan,
+assign enabled research, implementation, and review stages as separate
+sequential handoffs, each to a distinct agent. Review follows completed and
+reconciled implementation, and the reviewer must be independent of the
+implementer. When implementation delegation is disabled, the primary agent
+implements the subplans; enabled research and review are still assigned to
+agents.
+
+The root plan's `execution.user_checkpoints` controls when the coordinator
+pauses for the user's file review:
+
+- `each_handoff`: after each agent returns, check and reconcile its handoff,
+  show the files or output to the user, and wait for approval before spawning
+  or starting the next agent assignment, advancing the plan unit, or making its
+  output available downstream.
+- `each_subplan`: continue through the enabled stages for the current subplan
+  (or the root unit when there are no subplans), then show the reconciled unit
+  to the user and wait for approval before starting the next subplan or making
+  its output available downstream.
+- `plan_completion`: continue through the approved plan, then show the
+  reconciled result and wait for the user's review and approval. Pause earlier
+  only for a blocker, an unmet requirement, or a decision that changes the
+  approved scope.
+
+The user agrees to the checkpoint cadence before plan scaffolding. The
+coordinator must follow that cadence; the plan's approved execution contract
+authorizes its assignments, but does not waive its required user checkpoints.
+For a root plan without subplans, the user decides whether implementation is
+delegated. Research and review remain independently selectable workflows.
+
+Subplan exceptions override only the named dimension, using values defined by
+the dimension's owner. A subplan may override `user_checkpoints` using one of
+the values above. If a request conflicts with the plan's setting or scope, stop
+and reconcile the plan before proceeding. These settings govern durable plan
+work; an explicit standalone user request to delegate is sufficient
+authorization for that assignment.
 
 ## Completion
 
