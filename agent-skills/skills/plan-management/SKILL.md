@@ -27,44 +27,64 @@ This skill owns durable plan structure and the organization of plan artifacts.
 ## Planning contract
 
 A plan states what outcome is intended, the boundaries of the work, the work
-needed to reach it, and how completion will be recognized. A plan may remain in
-the conversation when it needs no durable coordination. Use a repository plan
-when ownership, dependencies, phases, durable status, or shared handoffs need
-to persist beyond the conversation.
+needed to reach it, and how completion will be recognized. Plans can be kept in
+the conversation for immediate use or recorded in the repository to preserve
+ownership, dependencies, phases, status, or shared handoffs. Do not choose the
+format on the user's behalf. If the user has not specified a format, ask whether
+they want a conversation plan or a durable repository plan before drafting it.
+Explain the difference neutrally and let the user choose.
 
-Keep the plan as concise as the work allows. Do not add phases, subplans,
-research, review, delegation, or deliverables without a concrete need. Do not
-create a parallel tracker when a canonical plan already owns the work.
+Prefer splitting work into small, bounded subtasks that an LLM can handle with
+focused context over assigning one large, continuous task. Keep related work
+together when a single LLM can do it more effectively with continuity, or when
+splitting would add coordination without improving execution. Keep the plan as
+concise as the work allows, and do not add phases, research, review, delegation,
+or deliverables without a concrete need. Do not create a parallel tracker when
+a canonical plan already owns the work.
 
 ## Creating or revising a plan
 
 1. Establish the objective and resolve any decision that would materially
    change the plan. Use the user's agreed direction as the basis; do not reopen
    settled decisions without a reason.
-2. Decide whether the plan needs to persist or coordinate multiple units. Keep
-   a short, self-contained plan in the conversation. Create or update a
-   repository plan when persistent ownership, dependencies, phases, status, or
-   handoffs are needed.
-3. Identify the owner, scope, inputs, intended output, necessary steps, and
-   completion condition. Split work into phases or subplans only when separate
-   ownership, dependencies, or lifecycle make the split useful.
-4. Record relationships and status in structured metadata when the plan is
-   durable. Keep the body focused on the work and avoid repeating metadata or
-   referenced material.
-5. Update affected parent and child plans, dependencies, consumers, and status
+2. Identify the owner, scope, inputs, intended output, necessary steps, and
+   completion condition. 
+3. Record relationships and status in structured metadata when the plan is
+   durable. Keep the body focused on the work and avoid repeating metadata or referenced material.
+4. Update affected parent and child plans, dependencies, consumers, and status
    together when work is materially re-scoped or reorganized.
-6. Validate durable plan structure and references with the repository's plan
+5. Validate durable plan structure and references with the repository's plan
    validator. Review substantive questions—such as whether the objective and
    deliverable are right—separately; a structural validator cannot decide them.
 
-Before creating a durable plan, recommend a subplan count and root execution
-settings based on the task's complexity, dependencies, assurance needs, and
-parallel work. Ask the user to choose or confirm the number of subplans,
-whether research is off or enabled with a setting defined by `$research`,
-whether review is enabled, and whether delegation is enabled. Explain your
-recommendation and ask the user to decide; do not select workflow settings
-silently. Research, review, and delegation are independent choices. Subplans
-inherit these settings; ask before creating any local exceptions.
+Recommend a subplan count and execution settings based on task complexity,
+dependencies, assurance needs, parallel work, and where focused LLM execution
+benefits from smaller tasks. 
+
+For plans with subplans, recommend delegation by default: the primary agent
+coordinates with the user, and agents execute the bounded subplan work. When
+enabled, research and review are assigned to agents as separate workflow
+stages; the reviewer must be independent of the implementer. For a root plan
+without subplans, ask the user whether to delegate.
+
+Ask the user to choose or confirm the subplan count, whether research is off or
+enabled with a setting defined by `$research`, whether review is enabled,
+whether to retain plan-local research working logs when research is enabled,
+whether delegation is enabled, and the user checkpoint cadence. When research
+is off, record `research_working: false` without asking. Recommend not
+retaining working logs unless durable search-path history would help with
+traceability or later review; explain the tradeoff and let the user choose.
+Recommend `each_handoff` for delegated plans: after every agent returns work,
+the primary agent checks and reconciles it, presents the handoff for user
+review, and waits for the user's approval before starting or spawning the next
+agent. Also offer
+`each_subplan` (continue through a subplan's enabled stages, or the root unit
+when there are no subplans, then wait for user review before continuing) and
+`plan_completion` (continue through the approved plan, then present the
+reconciled result for review and approval). The user may choose a different
+cadence. Explain the recommendation and record the agreed contract in root
+frontmatter; do not silently select settings. Subplans inherit these settings;
+ask before creating any local exceptions.
 
 After the user confirms, scaffold the plan with the creator. From this skill's
 directory, run:
@@ -73,21 +93,36 @@ directory, run:
 python3 scripts/create_plan.py <repository> \
   --subplans <count> \
   --research <false-or-setting-from-research> \
+  --research-working <true|false> \
   --review <true|false> \
-  --delegation <true|false>
+  --delegation <true|false> \
+  --user-checkpoints <each_handoff|each_subplan|plan_completion>
 ```
 
 The default destination is `<repository>/plans/`; pass `--destination` to use
 another directory. The creator assigns and reserves IDs, creates root and
 subplan `PLAN.md` scaffolds, and creates one initial research assignment or
 review assessment scaffold for each plan unit where that workflow is enabled.
-These workflow files contain the inferable relationship metadata and empty
-content sections. The agent fills in their substantive content, including
-review targets and criteria, before execution or validation. Delegation is a
-plan setting and does not create an artifact or identity.
+When research is enabled, it scaffolds the audit artifact for the durable plan
+handoff. It creates a `.working` artifact only when the user chose to retain
+working logs. These workflow files contain inferable relationship metadata
+and empty content sections. The agent fills in their substantive content,
+including review targets and criteria, before execution or validation.
+If an approved subplan exception enables working-log retention when the root
+setting is false, create the `.working` scaffold for that subplan's research
+assignment while completing its brief.
+Delegation is a plan setting and does not create an artifact or identity.
+
+Complete the root plan, subplan briefs, and workflow assignments, then present
+them with the execution contract to the user. Wait for the user's agreement on
+the scope, outputs, sequence, gates, and execution settings before launching
+any agent. The agreed contract authorizes in-scope assignments, subject to its
+user checkpoint cadence.
 
 Pass the user's research choice through verbatim; `$research` owns research
 setting names and meanings. Plan management does not maintain a separate list.
+Pass the user's research working-log choice through as `--research-working`
+and record it as `execution.research_working`.
 
 ID reservations are stored in the repository-level
 `.plan-management/id-reservations.json` ledger so removed IDs are not reused
@@ -135,17 +170,31 @@ execution_exception:
 ```
 
 A root uses `kind: root`, `parent: null`, and `phase: root`. It also declares
-`execution`, with three independent dimensions: `research`, `review`, and
-`delegation`. Their valid values and configurations belong to their owner skills:
-`research` defines research; `agent-delegation` defines review and delegation.
-Plan management records the selected values without maintaining a competing
-list of modes.
+`execution`, with the workflow dimensions `research`, `review`, and
+`delegation`, plus `research_working` for the user's choice to retain
+plan-local working logs and `user_checkpoints` for the agreed handoff cadence.
+Their valid values and configurations belong to their owner skills: `research`
+defines research; `agent-delegation` defines review and delegation. Plan
+management defines working-log retention and checkpoint cadence and records
+the user's choices.
+
+For example, a root might record:
+
+```yaml
+execution:
+  research: standard
+  research_working: false
+  review: true
+  delegation: true
+  user_checkpoints: each_handoff
+```
 
 Subplans inherit the root's `execution` defaults. A subplan may declare
 `execution_exception` with only the dimensions that differ. An exception may
 disable a dimension or enable it with a value defined by its owning skill,
-even when the root disabled that dimension. Omit `execution_exception` when
-there is no local override.
+even when the root disabled that dimension. It may also override
+`research_working` when the user agrees to a local retention choice. Omit
+`execution_exception` when there is no local override.
 
 Field meanings:
 
@@ -159,7 +208,13 @@ Field meanings:
 - `consumers`: destinations outside the plan graph; use an empty list when
   there are none. Consumers within the graph declare dependencies on relevant
   outputs in their own `depends_on` field.
-- `execution`: required on the root only; the three workflow dimensions above.
+- `execution`: required on the root only; the workflow dimensions,
+  `research_working`, and `user_checkpoints` above.
+- `research_working`: whether plan-coordinated research retains its
+  `<RES-ID>.working` artifact; a boolean chosen by the user when research is
+  enabled. It is false when research is disabled.
+- `user_checkpoints`: when the coordinator pauses for user review of delegated
+  work; one of `each_handoff`, `each_subplan`, or `plan_completion`.
 - `execution_exception`: optional on a subplan; local deviations from the
   root's defaults.
 
@@ -210,16 +265,21 @@ This dependency does not by itself mean that the output is ready for use.
 
 An output becomes available to consumers after its producing unit is complete,
 the coordinator has received and reconciled the result, and applicable
-dependency, review, or integration gates are satisfied. A file's existence or
+dependency, review, and integration gates are satisfied, along with any user
+checkpoint required before advancing beyond that output. A file's existence or
 a provisional result does not unlock downstream work. The plan cycle controls
 output availability; do not create a parallel artifact state machine.
 
-Plan management sets review and delegation defaults and local exceptions and
-coordinates plan gates. `agent-delegation` executes review and delegation and
-defines their procedures and temporary packets. When review follows execution,
-the executor first completes and reconciles the result; the target remains
-stable during evaluation. Delegation changes who performs work, not the
-identity of the plan unit or its artifacts.
+Plan management records the agreed execution contract, coordinates with the
+user, and manages plan gates. With subplans and delegation enabled, the primary
+agent coordinates; delegated agents execute subplan work. `agent-delegation`
+defines assignment, implementation, and review procedures. When research or
+review is enabled, those stages are assigned to agents; review follows
+completed, reconciled execution and evaluates a stable target. At each
+required user checkpoint, the primary agent presents the reconciled handoff
+and waits for approval before spawning or starting the next agent assignment.
+Delegation changes who performs work, not the identity of the plan unit or its
+artifacts.
 
 For durable plans, keep artifacts beside the unit that coordinates them. Root
 plan artifacts live in the root plan directory; artifacts specific to a
