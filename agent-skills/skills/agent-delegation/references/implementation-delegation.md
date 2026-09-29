@@ -49,6 +49,11 @@ Delegation continues the same plan unit and artifact identities. Do not create
 a delegation entity, `DEL-*` ID, separate subplan solely to represent the
 agent, or persistent history of which agent worked on it.
 
+When execution transfers to another agent, pass the current state of the work,
+unresolved points, and next action with the existing unit and artifact IDs.
+The incoming agent assumes that same unit; changing the executor does not
+create a new identity or make provisional work complete.
+
 ## Coordination for larger assignments
 
 Add coordination only when independent work, a long handoff, or several

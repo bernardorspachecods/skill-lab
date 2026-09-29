@@ -57,6 +57,46 @@ create a parallel tracker when a canonical plan already owns the work.
    validator. Review substantive questions—such as whether the objective and
    deliverable are right—separately; a structural validator cannot decide them.
 
+Before creating a durable plan, recommend a subplan count and root execution
+settings based on the task's complexity, dependencies, assurance needs, and
+parallel work. Ask the user to choose or confirm the number of subplans,
+whether research is off or enabled with a setting defined by `$research`,
+whether review is enabled, and whether delegation is enabled. Explain your
+recommendation and ask the user to decide; do not select workflow settings
+silently. Research, review, and delegation are independent choices. Subplans
+inherit these settings; ask before creating any local exceptions.
+
+After the user confirms, scaffold the plan with the creator. From this skill's
+directory, run:
+
+```bash
+python3 scripts/create_plan.py <repository> \
+  --subplans <count> \
+  --research <false-or-setting-from-research> \
+  --review <true|false> \
+  --delegation <true|false>
+```
+
+The default destination is `<repository>/plans/`; pass `--destination` to use
+another directory. The creator assigns and reserves IDs, creates root and
+subplan `PLAN.md` scaffolds, and creates one initial research assignment or
+review assessment scaffold for each plan unit where that workflow is enabled.
+These workflow files contain the inferable relationship metadata and empty
+content sections. The agent fills in their substantive content, including
+review targets and criteria, before execution or validation. Delegation is a
+plan setting and does not create an artifact or identity.
+
+Pass the user's research choice through verbatim; `$research` owns research
+setting names and meanings. Plan management does not maintain a separate list.
+
+ID reservations are stored in the repository-level
+`.plan-management/id-reservations.json` ledger so removed IDs are not reused
+and concurrent allocation runs cannot claim the same ID. It records reservations,
+not file paths. On first use, it seeds reservations from IDs it can find in
+the repository. The shared allocator is `scripts/artifact_ids.py`; use it for
+plan, workflow, and knowledge IDs. The validator builds an in-memory ID index
+on each run to check references and anchors.
+
 ## Durable plan identities and references
 
 A durable plan is organized around root and subplan entities:
@@ -68,13 +108,13 @@ A durable plan is organized around root and subplan entities:
 - Artifact IDs extend the entity ID with the artifact role. Type codes and
   canonical artifact roles use uppercase; descriptive artifact roles use
   lowercase.
-- The tool assigns and reserves the next available number; agents do not
+- The creator assigns and reserves the next available number; agents do not
   choose numbers. Root plan IDs use a repository-wide sequence. Subplan IDs
   share a sequence within their root. Ordinals have at least two digits, with
   a leading zero when needed. Removed IDs are never reused.
 - Relationships use stable IDs, not paths. Use `ID#anchor` to refer to a
-  section. A generated map resolves IDs to current paths and validates IDs and
-  anchors; do not maintain a second manual path registry.
+  section. The validator checks IDs and anchors against the current repository;
+  do not maintain a second manual path registry.
 
 ## Durable plan metadata
 
@@ -141,8 +181,12 @@ each subplan's execution brief.
 A subplan `PLAN` is the executable brief for one bounded task. It defines the
 task objective and scope, relevant inputs, expected output, and completion
 condition. Refer to inputs by ID. Do not redefine the root objective or repeat
-the root plan. Record advancement conditions in `depends_on`; mention other
-relevant inputs in the brief without implying that they are gates.
+the root plan. When repository knowledge could inform the task, follow the root
+context map to its knowledge entrypoint and consult only relevant entries.
+Record `KNOW` IDs that materially inform the task as inputs in the brief, not
+as `depends_on` gates unless an output must be satisfied before the task can
+advance. Simple coordination may consult repository knowledge without creating
+a plan or tracking the consultation.
 
 Record completion, verification, and material differences from the brief in a
 short `Outcome` section of the subplan `PLAN`. Do not repeat the objective or
@@ -179,7 +223,10 @@ identity of the plan unit or its artifacts.
 
 For durable plans, keep artifacts beside the unit that coordinates them. Root
 plan artifacts live in the root plan directory; artifacts specific to a
-subplan live in that subplan's directory. A typical layout is:
+subplan live in that subplan's directory. Plan-local knowledge is shared by
+the root plan and its subplans, so it lives only in the root plan's
+`knowledge/` directory, which the creator makes even when empty. A typical
+layout is:
 
 ```text
 <plan>/
@@ -192,13 +239,13 @@ subplan live in that subplan's directory. A typical layout is:
         ├── PLAN.md
         ├── RESULT.md       # only for a required standalone deliverable
         ├── research/
-        ├── reviews/
-        └── knowledge/
+        └── reviews/
 ```
 
-Create directories only when needed. Consumers refer to shared artifacts by
-ID; do not copy an artifact into the consumer's directory or change its
-membership to the producing entity.
+Create workflow directories other than the root plan's `knowledge/` only when
+needed. Consumers refer to shared artifacts by ID; do not copy an artifact
+into the consumer's directory or change its membership to the producing
+entity.
 
 ## Status and blocked work
 
@@ -219,10 +266,20 @@ available; the output availability conditions above still apply.
 ## Closing a completed plan
 
 When a durable plan reaches `status: complete`, verify its outputs,
-dependencies, consumers, and owned information. Then ask the user whether to
-delete the plan or move it to the relevant `reference/` directory as legacy.
-Until the user chooses, leave the plan in place and do not continue it or create
-another plan in its place.
+dependencies, consumers, and owned information. Before asking whether to
+archive or delete the plan, always compare its reconciled outputs with the
+repository's existing knowledge and surface likely reusable candidates to the
+user, or say that none were found. For each candidate, state its intended
+utility, material limitations, proposed create-or-update action, and the
+source artifacts needed to support it. Do not create or update repository
+knowledge until the user approves. If approved, follow the [repository
+knowledge structure](../context-architecture/references/knowledge.md) and
+preserve the source artifacts needed to resolve provenance independently of
+the plan's lifecycle. The user may request this knowledge check at any time.
+
+Then ask whether to delete the plan or move it to the relevant `reference/`
+directory as legacy. Until the user chooses, leave the plan in place and do not
+continue it or create another plan in its place.
 
 ## Validation
 

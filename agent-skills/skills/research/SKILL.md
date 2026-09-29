@@ -78,8 +78,10 @@ Each assigned research unit has its own `RES` identity. The coordinator
 declares whether work continues an existing research ID or starts a new
 assignment; deepening the question, checking missing evidence, changing agents,
 or adding sources and artifacts does not by itself create a new ID. The
-assignment mechanism reserves the ID. Do not choose an ID independently or
-create a delegation ID.
+assignment mechanism assigns and reserves the next available ID. Research IDs
+use a sequence unique within the root plan and shared by its subplans; use a
+two-digit ordinal, and never reuse a removed ID. Do not choose an ID
+independently or create a delegation ID.
 
 The research entity has two artifact roles:
 
@@ -118,12 +120,14 @@ does not create a separate `RESULT` artifact.
 
 | Rigor | Working artifact | Audit artifact | Consumer-facing output |
 |---|---|---|---|
-| Lightweight | Keep discovery checks transient; create no file by default. | Omit a separate audit file unless the result needs traceability or persistent review. | Return the answer in the conversation, or place a local plan decision in `Outcome` when applicable. |
-| Standard | Keep detailed search records temporary; create a working file when the search paths need to be retained during execution. | Create and retain when traceability, persistent review, a durable plan handoff, or reusable `KNOW` provenance requires it; otherwise keep the compact support temporary. | Create or update `KNOW` when findings are reusable; otherwise provide the local `Outcome` or conversational answer. |
+| Lightweight | Keep discovery checks transient; create no file by default. | Omit for a conversational answer. Create and retain when a durable `KNOW` or plan `Outcome` needs the supporting evidence, or traceability/persistent review requires it. | Return the answer in the conversation, or place a local plan decision in `Outcome` when applicable. Create or update `KNOW` when findings are reusable. |
+| Standard | Keep detailed search records temporary; create a working file when the search paths need to be retained during execution. | Create and retain when traceability, persistent review, a durable plan handoff, or reusable `KNOW` provenance requires it; otherwise keep compact support temporary only when no durable output relies on it. | Create or update `KNOW` when findings are reusable; otherwise provide the local `Outcome` or conversational answer. |
 | High-stakes | Keep operational search logs disposable unless needed during active work. | Create and retain a complete audit record, including provenance, dates, conflicts, and validation. | Deliver a bounded, evidence-calibrated answer to the intended consumer, using `KNOW` for reusable findings or the requesting plan's `Outcome` for a local decision. |
 
-The rigor level sets the minimum record. A plan or consumer that requires a
-persistent evidence trail can require an audit artifact at a lower level too.
+The rigor level sets the minimum record. Whenever research findings are written
+to a durable `KNOW` entry or a requesting plan's `Outcome`, create and retain
+`<RES-ID>.audit` so the output has a concrete, resolvable evidence source. A
+plan or consumer may require an audit artifact at a lower rigor level as well.
 Do not persist working logs merely because the audit is retained.
 
 The requesting root plan or subplan is a required input to plan-coordinated

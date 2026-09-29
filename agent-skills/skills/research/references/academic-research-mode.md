@@ -20,13 +20,31 @@ self-contained:
   and the decision the work supports;
 - **Requirements** — the claims, limitations, comparisons, or checks that must
   be present;
-- **Output format** — the artifact to return and its identifiers;
+- **Output format** — the requested content, its destination within the
+  research artifacts or consumer-facing output, and any local finding IDs;
 - **Evidence gate** — what must be linked to a page, section, table, figure,
   dataset, or external source before the artifact is accepted.
 
 Treat this as a task contract, not as permission to invent a persona or fill
 missing fields with plausible content. If the source was not provided or
 retrieved, say so.
+
+Academic stages and records are content within the assigned research unit;
+they do not create separate research identities or shared-model artifacts.
+Use the parent skill's `RES-ID.working` for temporary extraction and stage
+material, and `RES-ID.audit` for verified source descriptions, material
+findings, evidence, and limitations. Local IDs such as `F1` identify finding
+records within that work; they do not replace the parent skill's claim IDs,
+evidence IDs, source IDs, or artifact IDs. Keep the original paper or source
+available by its source ID and resolved location for each later stage, without
+copying it into additional artifacts.
+
+Deliver the final academic synthesis through the parent skill's consumer-facing
+output contract: use or update `KNOW` when findings are intended for reuse, put
+a concise local decision synthesis in the requesting plan's `Outcome` when
+applicable, or answer in the conversation when there is no durable consumer.
+The parent skill's rigor level determines which research artifacts are
+temporary or retained.
 
 ## Source-preserving pipeline
 
@@ -128,11 +146,15 @@ or institutional requirements would materially change the recommendation.
 
 ## Minimum academic output
 
-For a single paper, return an orientation map plus finding cards and open
+For a single paper, provide an orientation map plus finding cards and open
 questions in proportion to the chosen rigor level. For a literature review or
 thesis decision, add the thematic synthesis, source/claim trail, conflicts, and
-the question cards or bounded gap diagnosis requested by the user.
+the question cards or bounded gap diagnosis requested by the user. Keep these
+as sections or records in `working`/`audit` as appropriate; do not create one
+artifact per academic stage.
 
 The concise version may be prose, but every material finding must still be
 traceable. Standard and high-stakes work follows the parent skill's visible
-claim matrix, `E#` entries, source ledger, search record, and stop rationale.
+claim matrix, `E#` entries, source ledger, search record, and stop rationale
+in the applicable research artifacts. The consumer-facing synthesis should
+summarize the audit trail rather than duplicate it.
