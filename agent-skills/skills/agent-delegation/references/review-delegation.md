@@ -13,43 +13,21 @@ artifacts. If the user requests a formal, persistent review and no existing
 plan owns it, use `$plan-management` to establish the smallest suitable root
 plan before assigning the review.
 
-## Review identity and assignment
+## Review assignment and output
 
-The coordinator declares whether this assignment continues an existing review
-or creates a new one. Continuing a review keeps its ID when checking fixes,
-completing it, or verifying corrections. A new review assignment gets a new
-ID, even when its subject is similar. Adding perspectives or changing the
-target does not by itself require a new review ID.
+Use the review assignment and artifact supplied by the coordinator. The
+coordinator owns review IDs, frontmatter, paths, and plan relationships; do
+not choose or change them, and do not create a separate assignment document.
+The assignment identifies the concrete targets and criteria. Supporting
+materials help interpret a target but are not themselves targets unless the
+assignment says so.
 
-The tool assigns and reserves the review ID; agents do not choose a number. A
-review ID uses the `REV` type code (for example, `LR-01.REV-02`) and the
-sequence is unique within its root plan, shared by its subplans. Delegation
-does not create an additional identity or a `DEL-*` ID.
-
-Before the review starts, the review assignment's frontmatter declares:
-
-- `requested_by`: the ID of the root plan or subplan that requested the review;
-- `targets`: one or more concrete artifact IDs being evaluated; and
-- `criteria_refs`: one or more IDs or `ID#anchor` references to the criteria
-  used for evaluation.
-
-All three are required. Materials that help interpret the target may be
-included as optional references, but are not targets unless explicitly listed
-in `targets`. References use stable IDs, not paths. Resolve IDs to current
-locations for operational access. Store these assignment fields in the
-frontmatter of the review's `assessment` artifact, which is created before the
-evaluation begins; do not create a second assignment document.
-
-The review's final output is one `assessment` artifact. Its artifact ID is the
-review entity ID followed by `.assessment` (for example,
-`LR-01.REV-02.assessment`). Its frontmatter links it to the review entity with
-`belongs_to`, alongside the assignment fields above. Optional independent
-perspectives use numbered descriptive artifact roles such as
-`.perspective-01`; each links to the review entity with `belongs_to`. They are
-not required when one reviewer can produce the final assessment directly. The
-assessment records supported conclusions, evidence, uncertainties, and
-recommendations relevant to the declared criteria. Synthesis is the act of
-integrating perspectives, not an additional required artifact.
+Return the assigned assessment or perspective with conclusions supported by
+evidence tied to the criteria, uncertainties, and recommendations. Optional
+independent perspectives are separate assigned outputs; they are not needed
+when one reviewer can write the final assessment directly. The coordinator
+integrates perspectives into the final assessment while preserving supported
+disagreement and uncertainty.
 
 ## Stable target and review boundary
 
@@ -88,16 +66,15 @@ the coordinator still checks it against the declared targets and criteria.
 
 ## Handoff and completion
 
-The reviewer reports the assessment or perspective ID and its resolved
-location, the criteria considered, supporting evidence, uncertainties, and any
-unmet review requirement. The coordinator verifies that the review covers the
-declared targets and criteria before treating it as complete.
+The reviewer reports the assigned output and its location, the criteria
+considered, supporting evidence, uncertainties, and any unmet review
+requirement. The coordinator verifies that the review covers the declared
+targets and criteria before treating it as complete.
 
 Review conclusions do not themselves make a target or its outputs available
 downstream. The plan coordinator applies the review and integration gates in
-the plan's execution cycle. Keep review artifacts with the root plan or
-subplan that requested the review, in that unit's `reviews/` area; do not copy
-the assessed target into the review directory.
+the plan's execution cycle. Do not copy the assessed target into the review
+artifact.
 
 If delegated review is unavailable, say so explicitly and do not present the
 primary agent's own assessment as independent.

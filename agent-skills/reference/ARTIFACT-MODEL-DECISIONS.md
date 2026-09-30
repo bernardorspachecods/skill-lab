@@ -420,9 +420,10 @@ apontar para um ID ou âncora inexistente, a validação assinala o erro.
 
 ### D22 — Organização física por unidade de trabalho
 
-**Regra:** os artefactos locais ficam junto da unidade que os coordena. Os
-artefactos do plano principal ficam na sua pasta; os artefactos específicos de
-um subplano ficam na pasta desse subplano. Um `RESULT` separado só aparece
+**Regra:** os artefactos locais ficam diretamente na pasta da unidade que os
+coordena, sem subpastas por tipo. Os artefactos do plano principal ficam na
+sua pasta; os artefactos específicos de um subplano ficam na pasta desse
+subplano. Um `RESULT` separado só aparece
 quando exigido por D15. Consumidores referenciam artefactos partilhados pelos
 seus IDs, sem criar cópias nem alterar a sua pertença. A opção B é a estrutura
 selecionada; esta escolha não é apresentada como conclusão do piloto A/B, que
@@ -436,16 +437,16 @@ mapa para navegar entre unidades e relações.
 ```text
 <plan>/
 ├── PLAN.md
-├── research/       # artefactos pertencentes ao plano principal, se existirem
-├── reviews/        # reviews do plano principal, se existirem
-├── knowledge/      # knowledge local do plano principal, se existir
+├── <RES-ID>.audit.md       # apenas se foi pedida research ao plano principal
+├── <RES-ID>.working.md     # apenas se for retido o log de trabalho
+├── knowledge/              # knowledge local partilhada com os subplanos
 └── subplans/
     └── <subplan>/
         ├── PLAN.md
         ├── RESULT.md        # apenas se for um deliverable autónomo (D15)
-        ├── research/        # artefactos locais, se existirem
-        ├── reviews/         # reviews locais, se existirem
-        └── knowledge/       # knowledge local, se existir
+        ├── <RES-ID>.audit.md
+        ├── <RES-ID>.working.md     # apenas se for retido o log de trabalho
+        └── <REV-ID>.assessment.md  # apenas se houver review do output
 ```
 
 ### D23 — Schema de frontmatter de `PLAN`

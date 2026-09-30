@@ -47,9 +47,9 @@ canonical relationship references.
    out-of-scope changes, missed requirements, and relevant verification. The
    primary agent remains responsible for integrating and reconciling the work.
 
-Delegation continues the same plan unit and artifact identities. Do not create
-a delegation entity, `DEL-*` ID, separate subplan solely to represent the
-agent, or persistent history of which agent worked on it.
+Delegated work stays within the canonical task and its approved scope. Do not
+create a separate plan solely to represent the agent or keep an agent history
+when the work does not need one.
 
 When execution transfers to another agent, pass the current state of the work,
 unresolved points, and next action with the existing unit and artifact IDs.

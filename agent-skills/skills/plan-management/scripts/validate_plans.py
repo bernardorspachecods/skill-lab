@@ -31,7 +31,21 @@ REQUIRED_SECTIONS = [
 ]
 ALLOWED_KINDS = {"root", "subplan"}
 ALLOWED_STATUSES = {"not_started", "in_progress", "blocked", "complete"}
-EXECUTION_DIMENSIONS = {"research", "review", "delegation"}
+EXECUTION_DIMENSIONS = {
+    "research",
+    "root_research",
+    "research_working",
+    "review",
+    # Accept the legacy field while old plans are migrated. New plans omit it.
+    "delegation",
+    "user_checkpoints",
+}
+REQUIRED_EXECUTION_DIMENSIONS = EXECUTION_DIMENSIONS - {
+    "research_working",
+    "root_research",
+    "delegation",
+}
+USER_CHECKPOINTS = {"each_handoff", "each_subplan", "plan_completion"}
 ARTIFACT_FILENAME_RE = re.compile(
     r"^(?P<entity>(?:LR-\d{2,}\.)?(?:RES|REV)-\d{2,})\.(?P<role>working|audit|assessment|perspective-\d{2,})$"
 )
@@ -104,15 +118,26 @@ def validate_execution(value, label, field, issues, *, root):
     if unknown:
         add_issue(issues, "ERROR", label, f"{field} has unknown dimension(s): {', '.join(sorted(unknown))}")
     if root:
-        missing = EXECUTION_DIMENSIONS - keys
+        missing = REQUIRED_EXECUTION_DIMENSIONS - keys
         if missing:
             add_issue(issues, "ERROR", label, f"execution is missing dimension(s): {', '.join(sorted(missing))}")
     elif not keys:
         add_issue(issues, "ERROR", label, "execution_exception must name at least one local override")
     for dimension, setting in value.items():
+        if not root and dimension == "root_research":
+            add_issue(issues, "ERROR", label, "execution_exception cannot override root_research")
         if dimension == "research":
             valid = setting is False or (isinstance(setting, str) and bool(setting.strip()))
             expected = "false or a non-empty string (setting names are owned by the research skill)"
+        elif dimension == "root_research":
+            valid = setting is False or (isinstance(setting, str) and bool(setting.strip()))
+            expected = "false or a non-empty string (setting names are owned by the research skill)"
+        elif dimension == "user_checkpoints":
+            valid = isinstance(setting, str) and setting in USER_CHECKPOINTS
+            expected = f"one of {', '.join(sorted(USER_CHECKPOINTS))}"
+        elif dimension == "delegation":
+            valid = setting is True
+            expected = "true (implementation is always assigned to agents)"
         else:
             valid = isinstance(setting, bool)
             expected = "a boolean"
@@ -202,9 +227,6 @@ def validate_artifacts(root: Path, records, issues, id_index, known_plan_ids, sc
                 continue
             role = match.group("role")
             expected_owner = match.group("entity")
-            expected_area = "research" if expected_owner.split(".")[-1].startswith("RES-") else "reviews"
-            if expected_area not in relative_parts:
-                add_issue(issues, "ERROR", label, f"{expected_owner} artifacts must be stored under a {expected_area}/ area")
             owner = frontmatter.get("belongs_to")
             if owner != expected_owner:
                 add_issue(issues, "ERROR", label, f"belongs_to must be {expected_owner} for this artifact")
@@ -217,6 +239,22 @@ def validate_artifacts(root: Path, records, issues, id_index, known_plan_ids, sc
                     add_issue(issues, "ERROR", label, f"requested_by plan does not exist: {requester}")
                 elif expected_owner.startswith("LR-") and requester.split(".", 1)[0] != expected_owner.split(".", 1)[0]:
                     add_issue(issues, "ERROR", label, "requested_by and artifact identity must belong to the same root plan")
+                elif requester in records:
+                    requester_meta = records[requester]["meta"]
+                    requester_path = records[requester]["path"]
+                    expected_area = "research" if expected_owner.split(".")[-1].startswith("RES-") else "reviews"
+                    valid_locations = {
+                        requester_path.parent.resolve(),
+                        (requester_path.parent / expected_area).resolve(),  # legacy layout
+                    }
+                    if path.parent.resolve() not in valid_locations:
+                        add_issue(issues, "ERROR", label, "workflow artifacts must be stored beside the requesting plan")
+                    if requester_meta.get("kind") == "root":
+                        execution = requester_meta.get("execution") or {}
+                        if "root_research" in execution and role == "audit" and execution.get("root_research") is False:
+                            add_issue(issues, "ERROR", label, "root research artifacts require an explicit root_research setting")
+                        if "root_research" in execution and role == "assessment":
+                            add_issue(issues, "ERROR", label, "formal reviews belong to subplan outputs; root plan integrity checks are temporary")
             if role == "assessment":
                 for key in ("targets", "criteria_refs"):
                     value = frontmatter.get(key)
@@ -259,7 +297,10 @@ def discover_documents(root: Path, explicit_paths: list[str] | None):
         lower_parts = {part.lower() for part in relative.parts[:-1]}
         stem = path.stem.lower()
         in_workflow_area = bool(lower_parts & {"research", "reviews", "knowledge"})
-        if not in_workflow_area and (
+        is_workflow_artifact = ARTIFACT_FILENAME_RE.fullmatch(path.stem) is not None
+        if stem == "plan-integrity-check":
+            continue
+        if not in_workflow_area and not is_workflow_artifact and (
             "plans" in lower_parts or "plan" in lower_parts or stem == "plan" or stem.startswith("plan_")
         ):
             documents.append(path)
@@ -368,7 +409,7 @@ def validate(root: Path, paths: list[str] | None, strict: bool):
             execution = frontmatter.get("execution")
             if execution is None:
                 severity = "ERROR" if PLAN_ID_RE.fullmatch(plan_id) else "WARNING"
-                add_issue(issues, severity, label, "root plan is missing execution defaults for research, review, and delegation")
+                add_issue(issues, severity, label, "root plan is missing execution defaults")
             else:
                 validate_execution(execution, label, "execution", issues, root=True)
             if "execution_exception" in frontmatter:
@@ -459,12 +500,11 @@ def validate(root: Path, paths: list[str] | None, strict: bool):
 
     for plan_id, child_ids in children.items():
         parent = records[plan_id]
-        if parent["meta"]["kind"] == "root" and section_body(parent["markdown"], "Plan tree") is None:
-            add_issue(issues, "ERROR", parent["label"], "root with subplans must have a Plan tree section")
+        sequence = section_body(parent["markdown"], "Sequence") or ""
         for child_id in child_ids:
             child = records[child_id]
             links_to_child = False
-            for target in LINK_RE.findall(parent["markdown"]):
+            for target in LINK_RE.findall(sequence):
                 clean_target = target.split("#", 1)[0].split("?", 1)[0]
                 if not clean_target:
                     continue
@@ -473,7 +513,7 @@ def validate(root: Path, paths: list[str] | None, strict: bool):
                     links_to_child = True
                     break
             if not links_to_child:
-                add_issue(issues, "ERROR", parent["label"], f"parent does not link to child {child_id}")
+                add_issue(issues, "ERROR", parent["label"], f"Sequence does not link to child {child_id}")
 
     def visit(plan_id, stack):
         if plan_id in stack:
