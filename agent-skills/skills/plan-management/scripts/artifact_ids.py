@@ -18,13 +18,24 @@ PATTERNS = {
     "RES": re.compile(r"^(LR-\d{2,})\.RES-(\d{2,})$"),
     "REV": re.compile(r"^(LR-\d{2,})\.REV-(\d{2,})$"),
     "KNOW": re.compile(r"^(?:(LR-\d{2,})\.)?KNOW-(\d{2,})$"),
+    "AUD": re.compile(r"^(KNOW-\d{2,})\.AUD-(\d{2,})$"),
+    "WORK": re.compile(r"^(KNOW-\d{2,})\.WORK-(\d{2,})$"),
 }
 ARTIFACT_FILE_RE = re.compile(r"^(LR-\d{2,}\.(?:RES|REV)-\d{2,})\.(?:working|audit|assessment|perspective-\d{2,})$")
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*(?:\n|$)", re.DOTALL)
 
 
 def empty_registry() -> dict:
-    return {"root_plans": [], "subplans": {}, "research": {}, "reviews": {}, "knowledge": [], "plan_knowledge": {}}
+    return {
+        "root_plans": [],
+        "subplans": {},
+        "research": {},
+        "reviews": {},
+        "knowledge": [],
+        "plan_knowledge": {},
+        "knowledge_audits": {},
+        "knowledge_working": {},
+    }
 
 
 def _append_once(values: list[str], value: str) -> None:
@@ -44,7 +55,7 @@ def read_registry(path: Path) -> dict:
         data.setdefault(key, default)
     data["root_plans"] = list(dict.fromkeys(data["root_plans"]))
     data["knowledge"] = list(dict.fromkeys(data["knowledge"]))
-    for key in ("subplans", "research", "reviews", "plan_knowledge"):
+    for key in ("subplans", "research", "reviews", "plan_knowledge", "knowledge_audits", "knowledge_working"):
         data[key] = {owner: list(dict.fromkeys(values)) for owner, values in data[key].items()}
     return data
 
@@ -65,6 +76,11 @@ def discover_existing_ids(repository: Path, registry: dict) -> None:
         if not path.is_file() or path.suffix.lower() != ".md":
             continue
         stem = path.stem
+        for kind, directory in (("AUD", "audit"), ("WORK", "working")):
+            match = PATTERNS[kind].fullmatch(stem)
+            if match and path.parent == repository / "knowledge" / directory:
+                bucket = "knowledge_audits" if kind == "AUD" else "knowledge_working"
+                _append_once(registry[bucket].setdefault(match.group(1), []), stem)
         artifact = ARTIFACT_FILE_RE.fullmatch(stem)
         if artifact:
             artifact_id = artifact.group(1)
@@ -74,13 +90,24 @@ def discover_existing_ids(repository: Path, registry: dict) -> None:
         match = PATTERNS["KNOW"].fullmatch(stem)
         if match:
             plan_owner, _ = match.groups()
-            bucket = registry["plan_knowledge"].setdefault(plan_owner, []) if plan_owner else registry["knowledge"]
-            _append_once(bucket, stem)
+            if plan_owner:
+                bucket = registry["plan_knowledge"].setdefault(plan_owner, [])
+                _append_once(bucket, stem)
+            # Bare KNOW IDs belong only to the repository's shared knowledge collection.
+            elif path.parent == repository / "knowledge":
+                _append_once(registry["knowledge"], stem)
         try:
             frontmatter = FRONTMATTER_RE.match(path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError):
             continue
         if frontmatter:
+            source_artifact = re.search(r"^source_artifact_id:\s*['\"]?([A-Za-z0-9.-]+)", frontmatter.group(1), re.MULTILINE)
+            if source_artifact:
+                source_id = source_artifact.group(1)
+                for kind, bucket_name in (("RES", "research"), ("REV", "reviews")):
+                    match = PATTERNS[kind].fullmatch(source_id)
+                    if match:
+                        _append_once(registry[bucket_name].setdefault(match.group(1), []), source_id)
             plan_id = re.search(r"^plan_id:\s*['\"]?(LR-\d{2,}(?:\.SP-\d{2,})?)", frontmatter.group(1), re.MULTILINE)
             if plan_id:
                 value = plan_id.group(1)
@@ -98,7 +125,13 @@ def _used(registry: dict, kind: str, root: str | None) -> list[str]:
     if kind == "KNOW" and root is None:
         return registry["knowledge"]
     if root is None:
-        raise ValueError(f"{kind} IDs require a root plan ID")
+        raise ValueError(f"{kind} IDs require an owner ID")
+    if kind in {"AUD", "WORK"}:
+        match = PATTERNS["KNOW"].fullmatch(root)
+        if not match or match.group(1) is not None:
+            raise ValueError(f"invalid repository knowledge ID: {root}")
+        bucket = "knowledge_audits" if kind == "AUD" else "knowledge_working"
+        return registry[bucket].setdefault(root, [])
     match = PATTERNS["LR"].fullmatch(root)
     if not match:
         raise ValueError(f"invalid root plan ID: {root}")
@@ -112,6 +145,8 @@ def _format(kind: str, root: str | None, number: int) -> str:
     if kind == "SP":
         return f"{root}.SP-{number:02d}"
     if kind in {"RES", "REV"}:
+        return f"{root}.{kind}-{number:02d}"
+    if kind in {"AUD", "WORK"}:
         return f"{root}.{kind}-{number:02d}"
     return f"{root + '.' if root else ''}KNOW-{number:02d}"
 
@@ -191,7 +226,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("repository", type=Path, help="repository containing the shared reservation ledger")
     parser.add_argument("kind", choices=tuple(PATTERNS), help="ID namespace to allocate from")
-    parser.add_argument("--root", help="root plan ID for subplan, research, review, or plan-local knowledge IDs")
+    parser.add_argument("--root", help="owner ID for subplan, research, review, or knowledge artifact IDs")
     args = parser.parse_args()
     repository = args.repository.resolve()
     if not repository.is_dir():

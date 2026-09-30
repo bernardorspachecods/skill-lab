@@ -28,16 +28,20 @@ canonical relationship references.
 1. Confirm that the requested implementation is within the user's request and,
    when applicable, the plan's approved scope. If completing it requires a
    scope change, stop and consult the user before assigning that change.
-2. Follow the approved plan's assignment structure when it specifies one. If
-   there is no plan, or the plan leaves the agent count unspecified, ask the
-   user how many agents they want before assigning the work; do not default to
-   one. Split work across agents only when their outputs and write boundaries
-   are independent. Keep shared files under one writer and have the primary
-   agent reconcile shared changes.
+2. Follow the approved plan's assignment structure when it specifies one.
+   Otherwise, use one agent for cohesive work. Use multiple agents only when
+   their outputs and write boundaries are independent and parallel work
+   materially helps. Ask the user about agent count when that choice would
+   materially change the assignment or the user has made it a condition. Keep
+   shared files under one writer and have the primary agent reconcile shared
+   changes.
 3. Give the agent authority to implement only the named work and edit only its
    assigned files. It may resolve minor issues within the approved scope. It
    must surface unmet requirements, material ambiguities, and scope changes
-   rather than omit or work around them.
+   rather than omit or work around them. If a material ambiguity blocks
+   correct implementation, pause the affected work and ask the coordinator to
+   resolve it; the coordinator consults the user when needed. Continue
+   independent work when it remains useful and in scope.
 4. Use the smallest available isolation that prevents conflicting edits. For
    overlapping files, use a single writer or have agents return proposed
    changes without editing those files.
@@ -52,7 +56,7 @@ create a separate plan solely to represent the agent or keep an agent history
 when the work does not need one.
 
 When execution transfers to another agent, pass the current state of the work,
-unresolved points, and next action with the existing unit and artifact IDs.
+unresolved points, next action, and applicable existing unit and artifact IDs.
 The incoming agent assumes that same unit; changing the executor does not
 create a new identity or make provisional work complete.
 

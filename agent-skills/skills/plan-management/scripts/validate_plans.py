@@ -49,10 +49,12 @@ USER_CHECKPOINTS = {"each_handoff", "each_subplan", "plan_completion"}
 ARTIFACT_FILENAME_RE = re.compile(
     r"^(?P<entity>(?:LR-\d{2,}\.)?(?:RES|REV)-\d{2,})\.(?P<role>working|audit|assessment|perspective-\d{2,})$"
 )
+KNOWLEDGE_ARTIFACT_FILENAME_RE = re.compile(r"^(?P<owner>KNOW-\d{2,})\.(?P<role>AUD|WORK)-\d{2,}$")
 PLAN_ID_RE = re.compile(r"^LR-\d{2,}(?:\.SP-\d{2,})?$")
 SUBPLAN_ID_RE = re.compile(r"^LR-\d{2,}\.SP-\d{2,}$")
-STABLE_ID_RE = re.compile(r"^(?:LR-\d{2,}(?:\.SP-\d{2,})?(?:\.[A-Za-z][A-Za-z0-9-]*)?|(?:LR-\d{2,}\.)?KNOW-\d{2,})$")
-ID_REFERENCE_RE = re.compile(r"(?<![A-Za-z0-9_-])((?:LR-\d{2,}(?:\.SP-\d{2,})?(?:\.[A-Za-z][A-Za-z0-9-]*)?|(?:LR-\d{2,}\.)?KNOW-\d{2,}))(?:#([A-Za-z0-9_-]+))?")
+SOURCE_RESEARCH_ID_RE = re.compile(r"^LR-\d{2,}\.RES-\d{2,}$")
+STABLE_ID_RE = re.compile(r"^(?:LR-\d{2,}(?:\.SP-\d{2,})?(?:\.[A-Za-z][A-Za-z0-9-]*)?|(?:LR-\d{2,}\.)?KNOW-\d{2,}|KNOW-\d{2,}\.(?:AUD|WORK)-\d{2,})$")
+ID_REFERENCE_RE = re.compile(r"(?<![A-Za-z0-9_-])((?:LR-\d{2,}(?:\.SP-\d{2,})?(?:\.[A-Za-z][A-Za-z0-9-]*)?|KNOW-\d{2,}\.(?:AUD|WORK)-\d{2,}|(?:LR-\d{2,}\.)?KNOW-\d{2,}))(?:#([A-Za-z0-9_-]+))?")
 
 
 def parse_scalar(value: str):
@@ -206,9 +208,10 @@ def validate_artifacts(root: Path, records, issues, id_index, known_plan_ids, sc
         paths = (path for path in paths if any(path.is_relative_to(scan_root) for scan_root in scan_roots))
     for path in paths:
         match = ARTIFACT_FILENAME_RE.match(path.stem)
+        knowledge_artifact = KNOWLEDGE_ARTIFACT_FILENAME_RE.fullmatch(path.stem)
         relative_parts = {part.lower() for part in path.relative_to(root).parts[:-1]}
         in_workflow_area = bool(relative_parts & {"research", "reviews", "knowledge"})
-        if not match and not in_workflow_area:
+        if not match and not knowledge_artifact and not in_workflow_area:
             continue
         label = str(path.relative_to(root))
         try:
@@ -264,6 +267,31 @@ def validate_artifacts(root: Path, records, issues, id_index, known_plan_ids, sc
                         for reference in value:
                             if isinstance(reference, str) and reference:
                                 validate_reference(reference, label, id_index, issues)
+        elif knowledge_artifact:
+            artifact_id = path.stem
+            if artifact_id in artifact_records:
+                add_issue(issues, "ERROR", label, f"duplicate artifact ID: {artifact_id}")
+            artifact_records[artifact_id] = label
+            if frontmatter is None:
+                add_issue(issues, "ERROR", label, "knowledge artifact is missing YAML frontmatter")
+                continue
+            owner = knowledge_artifact.group("owner")
+            expected_folder = "audit" if knowledge_artifact.group("role") == "AUD" else "working"
+            if frontmatter.get("belongs_to") != owner:
+                add_issue(issues, "ERROR", label, f"belongs_to must be {owner} for this knowledge artifact")
+            validate_reference(owner, label, id_index, issues)
+            if path.parent.resolve() != (root / "knowledge" / expected_folder).resolve():
+                add_issue(issues, "ERROR", label, f"{expected_folder} knowledge artifacts must be stored in repository knowledge/{expected_folder}/")
+            source_id = frontmatter.get("source_artifact_id")
+            source_requester = frontmatter.get("source_requested_by")
+            source_role = frontmatter.get("source_artifact_role")
+            if not isinstance(source_id, str) or not SOURCE_RESEARCH_ID_RE.fullmatch(source_id):
+                add_issue(issues, "ERROR", label, "source_artifact_id must preserve the original research artifact ID")
+            expected_source_role = "audit" if expected_folder == "audit" else "working"
+            if source_role != expected_source_role:
+                add_issue(issues, "ERROR", label, f"source_artifact_role must be {expected_source_role} for this knowledge artifact")
+            if not isinstance(source_requester, str) or not PLAN_ID_RE.fullmatch(source_requester):
+                add_issue(issues, "ERROR", label, "source_requested_by must preserve the original requesting plan ID")
         elif "knowledge" in relative_parts and path.name.lower() not in {"index.md", "readme.md"}:
             subplan_ancestor = next(
                 (part for part in path.relative_to(root).parts[:-1] if SUBPLAN_ID_RE.fullmatch(part)),
@@ -496,6 +524,8 @@ def validate(root: Path, paths: list[str] | None, strict: bool):
                 document.parent,
             )
             artifact_scan_roots.add(plan_root)
+        if (root / "knowledge").is_dir():
+            artifact_scan_roots.add(root / "knowledge")
     validate_artifacts(root, records, issues, id_index, known_plan_ids, artifact_scan_roots)
 
     for plan_id, child_ids in children.items():

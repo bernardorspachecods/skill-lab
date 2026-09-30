@@ -1,200 +1,112 @@
 ---
 name: evaluate-relevance
-description: Assess whether something is relevant to Bernardo's current work, studies, professional direction, or personal knowledge library.
+description: Explain and explore candidates with Bernardo, then connect them to his context when useful. Use when he presents a tool, repository, idea, or capability to understand; do not use for simple factual questions.
 metadata:
-  short-description: Assess technology relevance for Bernardo
+  short-description: Explain candidates and explore their relevance
 ---
 
 # Evaluate relevance
 
-Use this skill when Bernardo asks whether something is worth adopting, testing,
-learning, preserving, or ignoring.
+Use this skill when Bernardo presents a tool, repository, framework, AI
+capability, idea, or other candidate and wants to understand or discuss it.
 
 ## Purpose
 
-Bernardo is exposed to more skills, frameworks, repositories, AI capabilities,
-and ideas than he can realistically adopt or investigate. The purpose of this
-evaluation is to protect his attention while preserving genuinely valuable
-future knowledge.
+Help Bernardo understand what he presented before asking him to judge its
+relevance or value. The evaluation is a staged conversation, not a verdict
+delivered in the first response. Explain the candidate clearly, explore the
+parts that matter to him, and connect it to his context with concrete possible
+applications when the discussion is ready for that.
 
-The question is not whether a candidate is generally good, impressive, or
-interesting. The question is where, if anywhere, it belongs in Bernardo's
-world:
+The first response may flag a clear mismatch with Bernardo's context so he can
+stop early. Otherwise, keep the personal-fit check brief until the candidate
+has been explained and explored. Do not turn every evaluation into an adoption
+decision.
 
-- in a current project or workflow;
-- in a focused experiment;
-- in his personal knowledge library for future use;
-- or nowhere in his current or foreseeable context.
+## Conversation flow
 
-This distinction matters because an idea can be valuable without being an
-adoption priority. A strong candidate with no plausible place in Bernardo's
-work is not relevant now; a promising but immature candidate may deserve a
-small experiment or a place in the library.
+### 1. Explain the candidate
 
-## Operating principle
+Start with the candidate itself, not Bernardo's profile or a recommendation.
+Explain what it is, what problem it addresses, how it works, its main parts,
+what using it involves, and what distinguishes it from relevant alternatives.
+For a GitHub repository, use its README and primary documentation or code to
+explain its purpose, architecture or workflow, key components, requirements,
+and a concrete example of how it is used.
 
-Start with Bernardo's context and motivation, not with the candidate's feature
-list or category. First establish the candidate's possible role in his work,
-studies, projects, or future direction. Only then go into technical details,
-trade-offs, and evidence.
+Give enough detail for Bernardo to understand the candidate. Scale the depth to
+its complexity and to what he presented; do not attempt to describe every file
+or feature by default. Separate confirmed facts from interpretation, and check
+current details such as maintenance, dependencies, license, and cost when they
+matter. Use primary sources where available.
 
-The evaluation should help Bernardo answer:
+### 2. Make an early relevance check
 
-1. Why might this matter to me?
-2. Where could it fit, if anywhere?
-3. What would it change or enable?
-4. Is that value worth the attention and adoption cost now?
-5. If not now, is it worth preserving for later?
+After understanding the candidate, consult only the parts of Bernardo's context
+needed to identify an obvious mismatch or plausible connection:
 
-## Navigation map
-
-| If you need to... | See |
-| --- | --- |
-| Understand why this evaluation exists | [Purpose](#purpose) and [Operating principle](#operating-principle) |
-| Load Bernardo's context | [Source context](#source-context) |
-| Position and analyse a candidate | [Evaluation sequence](#evaluation-sequence) |
-| Choose an outcome | [Decision](#decision) |
-| Structure the result | [Output](#output) |
-| Respect the skill's limits | [Boundaries](#boundaries) |
-
-## Source context
-
-Before assessing a candidate:
-
-1. Read the relevant sections of
-   [`ABOUT-ME.md`](../../../../ABOUT-ME.md).
-2. Read [`CONTEXT.md`](../../../../CONTEXT.md) to locate relevant projects and
-   areas.
-3. If the candidate may belong in the personal knowledge library, read
+1. Read relevant sections of [`ABOUT-ME.md`](../../../../ABOUT-ME.md) and
+   [`CONTEXT.md`](../../../../CONTEXT.md).
+2. Open only the nearest project `CONTEXT.md`, `AGENTS.md`, README, plan, or
+   other authoritative context needed for a plausible application.
+3. If a personal-library connection may matter, read
    [`personal-library/CONTEXT.md`](../../../../personal-library/CONTEXT.md) and
    only the relevant library material.
-4. Open only the nearest project `CONTEXT.md`, `AGENTS.md`, README, plan, or
-   other authoritative document needed for the candidate's plausible use cases.
-5. Inspect the candidate's primary documentation or source repository. Verify
-   current status, dependencies, license, and other changing facts when they
-   affect the decision.
 
-Do not read every project by default. Retrieve only the context needed to assess
-the candidate responsibly.
+If there is clearly no meaningful connection to Bernardo's current work,
+studies, professional direction, or plausible future interests, say so briefly
+and explain why. This is an early filter, not a judgment about the candidate's
+general quality. If there is a plausible connection, give at most a short
+signal in the first response; save detailed applications for the later
+discussion.
 
-## Evaluation sequence
+### 3. Continue as a conversation
 
-Follow this sequence. Do not begin with a fixed checklist based on the
-candidate's category.
+If there is a plausible connection, end the first response with one useful
+question about what Bernardo wants to understand or examine next. Offer a few
+specific angles only when they help him choose, such as architecture, practical
+usage, limitations, alternatives, or fit with a particular project. Do not ask
+a question whose answer is already clear from his request. If there is clearly
+no meaningful fit, explain that briefly and let Bernardo choose whether he
+wants to continue exploring the candidate anyway.
 
-### 1. Understand the candidate
+In later turns, follow his interests. Explain details, compare realistic
+alternatives, and investigate material trade-offs such as maturity, integration,
+maintenance, cost, privacy, security, learning effort, or lock-in as relevant.
+Ask focused questions only when a wrong assumption would change the direction
+of the discussion. Keep track of unresolved questions and conclusions when the
+conversation becomes long enough that they could be lost.
 
-Establish what the candidate actually does, what problem it claims to solve,
-what it assumes, and what using it would require. Do not rely on its category,
-marketing, popularity, or feature count.
+### 4. Connect it to Bernardo's context
 
-### 2. Position it in Bernardo's context
+When there is enough understanding to make the connection useful, give a few
+concrete examples of where or how the candidate might apply in Bernardo's
+context. Explain what each example could enable or change, and distinguish
+confirmed context from inference. Include limitations or conditions that could
+make an example a poor fit.
 
-Use `ABOUT-ME.md`, `CONTEXT.md`, and only the relevant project or library
-context to identify a plausible connection. Explain why Bernardo might care, or
-why there is no credible connection.
+Possible roles include:
 
-Name the likely role explicitly:
+- a current project or workflow;
+- a focused experiment;
+- a personal knowledge-library reference;
+- a future possibility with no action yet;
+- no meaningful fit.
 
-- current project or workflow;
-- focused experiment;
-- personal knowledge library;
-- future possibility with no justified action yet;
-- no meaningful place in Bernardo's context.
+These are ways to locate possible applications, not mandatory verdict labels.
 
-### 3. Understand the change
+## Recommendations and decisions
 
-Describe what the candidate would enable, improve, replace, or make possible.
-Compare it with the current approach and realistic alternatives. Focus attention
-on the projects and workflows that could actually change; do not survey every
-project in the workspace.
+Do not force a final recommendation, confidence rating, library disposition,
+or adoption decision into the first response. Make a recommendation when
+Bernardo asks for one or when the discussion has reached that question. Then
+weigh the likely value against attention and adoption costs, explain the
+evidence and assumptions, and suggest a proportionate next step.
 
-### 4. Test the value against the cost
-
-Investigate only the factors material to this decision, such as fit,
-integration, maturity, maintenance, cost, privacy, security, learning effort,
-lock-in, or evidence quality. Separate immediate usefulness from longer-term
-value.
-
-### 5. Decide and explain
-
-State what would have to be true for the candidate to be useful, distinguish
-facts from inferences, and make the recommendation from the discovered fit.
-
-Distinguish clearly between:
-
-- confirmed facts from the candidate or Bernardo's context;
-- reasonable inferences;
-- assumptions that could change the recommendation;
-- unknowns that require a focused test or a question.
-
-## Decision
-
-Use one of these outcomes:
-
-- **Adopt now** — clear current value and acceptable cost.
-- **Run a focused test** — plausible value, but an experiment is needed.
-- **Preserve as library reference** — no immediate action is justified, but the
-  candidate contains durable knowledge or a future-facing idea worth keeping in
-  the personal library.
-- **Do not adopt** — insufficient value, poor fit, excessive cost, or meaningful
-  overlap.
-- **Insufficient evidence** — the candidate or intended use is not clear enough
-  to decide responsibly.
-
-Do not recommend adoption merely because the candidate is interesting.
-
-## Output
-
-Keep the result concise but evidence-based:
-
-```md
-## Verdict
-
-**Decision:** Adopt now | Run a focused test |
-Preserve as library reference | Do not adopt | Insufficient evidence
-
-**Confidence:** High | Medium | Low
-
-**Library disposition:** None | Preserve as reference | Add to exploratory inbox
-
-## Why this might matter
-
-[The concrete reason Bernardo might care, or why no plausible connection was
-found.]
-
-## Position in Bernardo's context
-
-[Current project, focused experiment, personal library, future possibility, or
-no meaningful fit.]
-
-## Relevant context
-
-[The specific project, study area, workflow, or longer-term direction involved.]
-
-## Assessment
-
-[What the candidate does and why it does or does not fit the relevant context.]
-
-## Evidence and assumptions
-
-- Confirmed:
-- Inferred:
-- Unknown:
-
-## Costs and risks
-
-- Adoption and learning:
-- Maintenance and opportunity cost:
-- Integration, privacy, security, or lock-in:
-
-## Recommendation
-
-[The smallest sensible next action, or why no action is justified.]
-```
-
-If the intended use is materially unclear, ask one focused question before
-deciding. Otherwise, state the assumption explicitly and continue.
+Possible conclusions, when useful, include adopting, running a focused test,
+preserving a reference, not adopting, or needing more evidence. Do not
+recommend adoption merely because a candidate is interesting or technically
+strong.
 
 ## Boundaries
 
@@ -204,7 +116,8 @@ deciding. Otherwise, state the assumption explicitly and continue.
 - Do not install, clone, activate, subscribe to, or otherwise adopt anything
   unless Bernardo separately asks for that action.
 - Do not add material to the personal library automatically. Recommend a
-  library disposition first, and write or move content only when Bernardo asks
-  for that action.
-- Do not turn general technical quality into personal relevance without
-  identifying a plausible connection to Bernardo's context.
+  disposition first, and write or move content only when Bernardo asks.
+- Do not confuse a candidate's general quality with its relevance to Bernardo.
+- Keep the first response explanatory and open-ended. Use an obvious lack of
+  personal fit only as an early filter; explore plausible fit through the
+  conversation before drawing broader conclusions.

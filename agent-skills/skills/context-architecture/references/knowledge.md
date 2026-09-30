@@ -41,11 +41,34 @@ for plan-local knowledge:
 ```bash
 python3 <plan-management-skill>/scripts/artifact_ids.py <repository> KNOW
 python3 <plan-management-skill>/scripts/artifact_ids.py <repository> KNOW --root LR-01
+python3 <plan-management-skill>/scripts/artifact_ids.py <repository> AUD --root KNOW-01
+python3 <plan-management-skill>/scripts/artifact_ids.py <repository> WORK --root KNOW-01
 ```
 
 Use stable IDs for relationships; the plan validator builds an in-memory
 index to check IDs and anchors against current locations. Do not maintain a
 second registry of paths in the index.
+
+Keep repository knowledge artifacts in shared type folders: `knowledge/audit/`
+for supporting evidence audits and `knowledge/working/` for retained working
+files. Name each artifact under its knowledge entry, using `<KNOW-ID>.AUD-##`
+for audits and `<KNOW-ID>.WORK-##` for working files. For example:
+
+```text
+knowledge/
+├── KNOW-01.md
+├── audit/
+│   ├── KNOW-01.AUD-01.md
+│   └── KNOW-01.AUD-02.md
+└── working/
+    └── KNOW-01.WORK-01.md
+```
+
+The `AUD` and `WORK` ordinals are allocated separately for each knowledge ID.
+The knowledge entry's `derived_from` lists the supporting artifact IDs. Each
+artifact declares `belongs_to` as its owning knowledge ID. Promoted research
+artifacts also record their original research ID, role, and requester as
+`source_artifact_id`, `source_artifact_role`, and `source_requested_by`.
 
 ## Identities and entries
 
@@ -68,9 +91,16 @@ specific source artifacts that support its content.
 
 When an entry is enriched, update its provenance to cover the retained content.
 When plan-local knowledge becomes repository-level knowledge, use the
-repository-level identity and preserve or move the supporting artifacts needed
-to resolve its provenance independently of the plan's lifecycle. Repair any
-references changed by the move. Relationships use IDs, not paths.
+repository-level identity and move each supporting research audit into
+`knowledge/audit/` as part of promotion. Move a retained research working file
+into `knowledge/working/` when it supports the promoted entry. Reassign each
+moved audit or working file a knowledge-owned ID such as `KNOW-01.AUD-01` or
+`KNOW-01.WORK-01`, rename its file to match, and set `belongs_to` to the owning
+knowledge ID. Preserve the former research ID, artifact role, and requester in
+`source_artifact_id`, `source_artifact_role`, and `source_requested_by`. Update
+the knowledge entry's `derived_from` and all links or references to the new IDs.
+Keep one canonical copy. Do this before the plan can be deleted, so the
+promoted entry and its evidence remain self-contained in `knowledge/`.
 
 ## Index
 

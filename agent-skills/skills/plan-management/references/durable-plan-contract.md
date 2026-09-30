@@ -278,9 +278,10 @@ may override it with an approved `execution_exception`. Each file declares
 `belongs_to: <RES-ID>`; the audit also declares `requested_by:
 <PLAN-ID-or-subplan-ID>`. IDs are canonical; resolve them to current paths for
 file access. Keep research artifacts directly in the requesting unit's
-directory, beside its `PLAN.md`. Scaffold root research artifacts only when
-the user explicitly requested root research. Do not create a separate
-`RESEARCH.md` for the unit.
+directory, beside its `PLAN.md`, until a knowledge promotion carries them into
+repository knowledge. Scaffold root research artifacts only when the user
+explicitly requested root research. Do not create a separate `RESEARCH.md` for
+the unit.
 
 The coordinator supplies the requesting plan unit and its objective, scope,
 constraints, applicable guidelines, artifact IDs and locations, and intended
@@ -312,6 +313,15 @@ reviewer can produce the assessment directly. Keep formal review artifacts
 directly in the requesting subplan's directory, beside its `PLAN.md`. Do not
 create a formal review artifact for the root's completed output. Do not copy
 the target into the subplan directory.
+
+The coordinator's subplan brief and assessment frontmatter define the review
+assignment; do not create a separate assignment document. When independent
+perspectives are assigned, the coordinator checks and integrates them into the
+final assessment while preserving supported disagreement and uncertainty.
+With one reviewer, that reviewer may prepare the assessment directly; the
+coordinator still checks it against the targets and criteria. The reviewer
+must not edit another reviewer's perspective or the coordinator's final
+assessment.
 `$agent-delegation` defines how to conduct and reconcile subplan output reviews.
 
 ## Execution sequence, checkpoints, and output availability
@@ -360,12 +370,13 @@ review, and integration gates are satisfied, and any required checkpoint is
 approved. File existence or a provisional result does not unlock downstream
 work. Do not create a parallel artifact state machine.
 
-For durable plans, keep artifacts beside the unit that coordinates them.
-Subplan-specific research and review artifacts live directly in that
-subplan's directory. Root research artifacts live at the root only when
-explicitly requested. Plan-local knowledge is shared by the root and
-subplans, so it lives only in the root plan's `knowledge/` directory. The
-creator makes that directory even when empty. A typical layout is:
+For durable plans, keep artifacts beside the unit that coordinates them until
+they are promoted into repository knowledge. Subplan-specific research and
+review artifacts live directly in that subplan's directory. Root research
+artifacts live at the root only when explicitly requested. Plan-local knowledge
+is shared by the root and subplans, so it lives only in the root plan's
+`knowledge/` directory. The creator makes that directory even when empty. A
+typical layout is:
 
 ```text
 <plan>/
@@ -402,12 +413,22 @@ the plan, compare reconciled outputs with repository knowledge and surface
 likely reusable candidates, or say none were found. For each candidate, state
 its utility, limitations, proposed create-or-update action, and source
 artifacts. Do not create or update repository knowledge until the user
-approves. If approved, follow the [repository knowledge structure](../../context-architecture/references/knowledge.md)
-and preserve sources needed to resolve provenance after the plan's lifecycle.
+approves. If approved, follow the [repository knowledge structure](../../context-architecture/references/knowledge.md).
+As part of promotion, move every supporting research audit into repository
+`knowledge/audit/`. Move a retained research working file into
+`knowledge/working/` when it supports the promoted entry. Assign each moved
+artifact a knowledge-owned ID such as `KNOW-01.AUD-01` or `KNOW-01.WORK-01`,
+rename its file to match, and set `belongs_to` to the owning knowledge ID.
+Preserve the former research ID, artifact role, and requester in
+`source_artifact_id`, `source_artifact_role`, and `source_requested_by`. Update
+`derived_from`, links, and references to the new IDs. Keep one canonical copy
+and complete this migration before the plan can be deleted. This makes the
+promoted entry's provenance independent of the plan's lifecycle.
 
-Then ask whether to delete the plan or move it to the relevant `reference/`
-directory as legacy. Until the user chooses, leave it in place and do not
-continue it or create another plan in its place.
+The plan no longer needs to be retained to preserve promoted knowledge or its
+research audits. Ask whether to delete the plan or move it to the relevant
+`reference/` directory for its workflow history. Until the user chooses, leave
+it in place and do not continue it or create another plan in its place.
 
 Use the repository's plan validator. It checks structural requirements, IDs,
 references, and supported relationships; it cannot judge whether an objective

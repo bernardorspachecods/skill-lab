@@ -57,7 +57,11 @@ reference under `$plan-management` when creating or coordinating a durable
 plan. Assigned agents work from the coordinator's brief and the artifacts named
 there; they do not need to load the plan contract to carry out a bounded
 assignment. A standalone user request to delegate authorizes that assignment
-without a durable plan.
+without a durable plan. For a standalone review, return the assessment in the
+conversation unless the user requests a persistent output. If persistence is
+requested but no destination is supplied, resolve the destination with the
+user before creating an artifact. Do not create a durable plan solely to give
+the review an ID or artifact location.
 
 ## Completion
 

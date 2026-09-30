@@ -71,6 +71,16 @@ It contains only package metadata and supported runtime metadata derived from th
   - `display_name`: Context Architecture
   - `short_description`: Organize agent-facing repository context
 
+## conversation-transcript
+
+- Description: Clean exported Codex session files into a user-assistant transcript, optionally retaining a compact activity trail. Use when asked to remove session artifacts or preserve an audit trail; do not use to summarize or rewrite the conversation.
+- Package: [`agent-skills/skills/conversation-transcript`](skills/conversation-transcript/SKILL.md)
+- Runtime metadata: `present`
+- Supported UI metadata:
+  - `display_name`: Conversation Transcript
+  - `short_description`: Clean exported session transcripts
+  - `default_prompt`: Use $conversation-transcript to clean an exported session file. If the user has not specified messages-only or messages-and-activity, ask which mode to use before editing.
+
 ## domain-modeling
 
 - Description: Build and sharpen a project's domain model. Use when changing domain terminology, recording an architectural decision, or when another skill needs to maintain the model; do not invoke merely to read existing vocabulary.
