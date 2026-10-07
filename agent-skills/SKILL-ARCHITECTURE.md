@@ -92,7 +92,7 @@ It contains only package metadata and supported runtime metadata derived from th
 
 ## evaluate-relevance
 
-- Description: Assess whether something is relevant to Bernardo's current work, studies, professional direction, or personal knowledge library.
+- Description: Explain and explore candidates with Bernardo, then connect them to his context when useful. Use when he presents a tool, repository, idea, or capability to understand; do not use for simple factual questions.
 - Package: [`agent-skills/skills/evaluate-relevance`](skills/evaluate-relevance/SKILL.md)
 - Runtime metadata: `missing`
 
@@ -114,16 +114,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Grill Stuck
   - `short_description`: Recover from a stuck approach
-
-## llm-structuring
-
-- Description: Use this skill when writing, reviewing, or troubleshooting instructions, prompts, or documentation intended for an LLM to read and act on. Trigger on: drafting or reviewing a skill, prompt, or instruction set for a model; deciding what to emphasize or how to phrase a rule for LLM consumption; an instruction isn't being followed reliably and the cause is unclear; structuring how one model or agent hands context to another.
-- Package: [`agent-skills/skills/llm-structuring`](skills/llm-structuring/SKILL.md)
-- Runtime metadata: `present`
-- Supported UI metadata:
-  - `display_name`: LLM Structuring
-  - `short_description`: Structure instructions for reliable LLM behavior
-  - `default_prompt`: Use $llm-structuring to improve these instructions for an LLM.
 
 ## new-project-guidelines
 
@@ -198,3 +188,13 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: TDD
   - `short_description`: Test-driven red-green-refactor
+
+## writing-for-agents
+
+- Description: Use this skill when writing, reviewing, or troubleshooting instructions, prompts, or documentation intended for an LLM to read and act on. Trigger on: drafting or reviewing a skill, prompt, or instruction set for a model; deciding what to emphasize or how to phrase a rule for LLM consumption; an instruction isn't being followed reliably and the cause is unclear; structuring how one model or agent hands context to another.
+- Package: [`agent-skills/skills/writing-for-agents`](skills/writing-for-agents/SKILL.md)
+- Runtime metadata: `present`
+- Supported UI metadata:
+  - `display_name`: Writing for Agents
+  - `short_description`: Write concise, sufficient guidance for agents
+  - `default_prompt`: Use $writing-for-agents to improve these instructions for an LLM.

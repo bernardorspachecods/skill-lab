@@ -8,6 +8,7 @@ that validates and catalogs them.
 | Request | First area | Likely dependencies |
 | --- | --- | --- |
 | Use or change a skill | [Skill authoring rules](skills/skill-authoring/SKILL.md) and the target package under [`skills/`](skills/) | Generated catalog and package resources |
+| Redo a plan that missed the user's need | [Redo plan protocol](skills/plan-management/references/redo-plan-protocol.md#redo-plan-protocol) | Original plan and outputs; [durable plan contract](skills/plan-management/references/durable-plan-contract.md#durable-plan-contract) |
 | Discuss the shared artifact model for plans, research, reviews, and knowledge | [Artifact model decisions](ARTIFACT-MODEL-DECISIONS.md) | Evolution drafts and the linked organization experiment handoff |
 | Inspect the generated catalog | [SKILL-ARCHITECTURE.md](SKILL-ARCHITECTURE.md) or [interactive catalog](SKILL-ARCHITECTURE.html) | Skill packages and supported runtime metadata |
 | Validate skill packages | [validate_skill_catalog.py](scripts/validate_skill_catalog.py) | `skills/`, `agents/openai.yaml`, and references |

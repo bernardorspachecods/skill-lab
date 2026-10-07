@@ -1,4 +1,0 @@
-interface:
-  display_name: "LLM Structuring"
-  short_description: "Structure instructions for reliable LLM behavior"
-  default_prompt: "Use $llm-structuring to improve these instructions for an LLM."

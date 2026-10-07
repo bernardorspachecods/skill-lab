@@ -1,56 +1,52 @@
 # Academic Research Mode
 
-Use this reference when `research` is applied to academic papers, literature
-reviews, thesis planning, empirical findings, or research-question design.
+Use this reference when `$research` is applied to academic papers, literature
+reviews, thesis planning, empirical findings, or research-question design. It
+adds academic-specific structures and stages to the parent skill's general
+workflow. Follow the parent skill for the research brief, source evaluation,
+claim-linked evidence, general synthesis and audit, rigor-dependent records,
+and consumer-facing output. Choose only the academic stages that serve the
+question.
 
-This is an optional branch of the `research` skill, not a separate skill. It
-shares the same source ledger, claim IDs, evidence entries, uncertainty rules,
-and citation audit. The branch supplies a compact contract for academic
-subtasks and a pipeline that keeps evidence from being lost between stages.
+## Contract for focused academic subtasks
 
-## Contract for each subtask
-
-Before delegating or composing a focused academic task, make the brief
+When delegating or composing a focused academic subtask, make its brief
 self-contained:
 
-- **Role** — the function being performed, such as paper mapper, finding
-  extractor, literature synthesizer, or question critic;
+- **Role** — the academic function, such as paper mapper, finding extractor,
+  literature synthesizer, or question critic;
 - **Objective** — one concrete outcome;
-- **Inputs** — paper/source IDs, excerpts or files, topic, population, period,
-  and the decision the work supports;
-- **Requirements** — the claims, limitations, comparisons, or checks that must
-  be present;
-- **Output format** — the requested content, its destination within the
-  research artifacts or consumer-facing output, and any local finding IDs;
-- **Evidence gate** — what must be linked to a page, section, table, figure,
-  dataset, or external source before the artifact is accepted.
+- **Inputs** — source IDs and available papers or excerpts, plus the topic,
+  population, period, or decision needed for this subtask;
+- **Requirements** — the findings, limitations, comparisons, or checks needed
+  for the outcome;
+- **Output** — the requested content, destination, and any local finding IDs;
+- **Evidence gate** — the page, section, table, figure, dataset, or source link
+  needed to verify a material result.
 
-Treat this as a task contract, not as permission to invent a persona or fill
-missing fields with plausible content. If the source was not provided or
-retrieved, say so.
+Do not invent a persona or fill missing fields with plausible content. If a
+source was not provided or retrieved, say so.
 
-Academic stages and records are content within the assigned research unit;
-they do not create separate research identities or shared-model artifacts.
-Use the parent skill's `RES-ID.working` for temporary extraction and stage
-material, and `RES-ID.audit` for verified source descriptions, material
-findings, evidence, and limitations. Local IDs such as `F1` identify finding
-records within that work; they do not replace the parent skill's claim IDs,
-evidence IDs, source IDs, or artifact IDs. Keep the original paper or source
-available by its source ID and resolved location for each later stage, without
-copying it into additional artifacts.
+## Academic findings and records
 
-Deliver the final academic synthesis through the parent skill's consumer-facing
-output contract: use or update `KNOW` when findings are intended for reuse, put
-a concise local decision synthesis in the requesting plan's `Outcome` when
-applicable, or answer in the conversation when there is no durable consumer.
-The parent skill's rigor level determines which research artifacts are
-temporary or retained.
+Academic stages belong to the assigned research unit. They do not create a new
+research identity or one artifact per stage. Keep `F#` finding cards and
+interim stage material in `RES-ID.working`; keep verified source descriptions
+and canonical `E#` evidence records in `RES-ID.audit`, following the parent
+skill's rigor and retention rules.
+
+An `F#` card is an academic summary of a finding reported by a source. It helps
+orient and compare studies; it is not a second evidence record. The parent
+skill's `E#` remains the canonical claim-linked record for the exact passage
+or data, location, relation to `C#`, limits, support status, and confidence.
+Each material `F#` links to the relevant `E#` entry or entries instead of
+copying their evidence or claim-support assessment. `F#` IDs are local to the
+research unit and do not replace parent `C#`, `E#`, `S#`, or artifact IDs.
 
 ## Source-preserving pipeline
 
-Choose only the stages that serve the user's question. A literature review may
-need all of them; a question about one paper may need only mapping and finding
-extraction.
+Select stages to fit the question. A literature review may use the full
+pipeline; work on one paper may need only orientation and finding extraction.
 
 ```text
 paper/source
@@ -61,100 +57,90 @@ orientation map → finding cards → thematic synthesis → question cards
 
 ### 1. Orientation map
 
-Record enough context to prevent a result from being detached from its study:
+Link the map to the source ID in the parent source ledger. Record academic
+context needed to interpret the study:
 
-- bibliographic identity, version, publication/access dates, and source ID;
 - research question or objective;
-- theoretical frame, if the paper actually states one;
-- design, data, sample/population, measures, and setting;
-- main results and the authors' stated limitations;
+- theoretical frame, if the paper states one;
+- design, data, sample or population, measures, and setting;
+- main author-reported results and stated limitations;
 - unclear, missing, or inaccessible information.
 
-Separate what the authors report from what the agent infers. Do not call a
-paper's contribution “novel” merely because the text uses that word; check the
-relevant literature and qualify the result as a candidate contribution when
-that comparison has not been done.
+Separate author-reported results from agent inference. Do not call a paper's
+contribution “novel” merely because the paper uses that word. Check the
+relevant literature, or qualify novelty as provisional when that comparison
+has not been made.
 
 ### 2. Finding cards
 
-For each material finding, create a compact card:
+Create an `F#` card for each source finding material to the task. Keep the
+summary concise and use the parent `E#` entry for its claim-linked support:
 
 ```text
 F1
-Claim: what the source supports
-Location: page/section/table/figure or exact web passage
-Evidence: data, method, comparison, or quotation that supports it
-Scope: population, setting, period, and conditions
-Author interpretation: what the source says it means
+Finding: result or conclusion reported by the source
+Evidence links: relevant E# entries
+Author interpretation: what the source says the finding means
+Study context: finding-specific context, if not clear from the orientation map
 Agent inference: separate and labelled, if needed
-Limitations: threats, exclusions, uncertainty, and unreported details
-Support/confidence: supported | partial | uncertain | contradicted
 ```
 
-Finding cards point to the original source. A summary can help navigate a long
-paper, but it cannot be the sole support for a material finding when the paper
-or underlying data is available.
+Do not add exact passages, data, locations, support status, or confidence
+assessments to the `F#` card when those are recorded in its linked `E#` entries.
+Use the `E#` entries, not the `F#` summary alone, to support material claims.
 
 ### 3. Thematic literature synthesis
 
-Organize a review by concepts, mechanisms, methods, populations, or tensions
-that answer the brief—not by producing one paragraph per paper. For each theme,
-show:
-
-- which finding cards and sources belong to it;
-- where results converge and where they conflict;
-- differences in design, sample, measurement, or context that may explain the
-  conflict;
-- what is genuinely missing versus merely not searched or not accessible.
+Organize a literature review by concepts, mechanisms, methods, populations, or
+tensions that answer the brief, rather than by writing one paragraph per paper.
+Use the academic finding cards to compare results. Consider whether differences
+in design, sample, measurement, or context explain apparent conflicts.
+Distinguish a gap supported by the reviewed literature from a topic that was
+not searched or was inaccessible.
 
 Do not impose a fixed number of studies, a publication cutoff, or a claim of
 consensus unless the brief or an appropriate review protocol justifies it.
-Group papers that report the same underlying dataset, trial, or result as one
-provenance cluster; multiple papers are not automatically independent evidence.
+Treat papers from the same underlying dataset, trial, or result as one
+provenance cluster, following the parent skill's provenance rule.
 
 ### 4. Research-question cards
 
-Generate candidate questions from supported findings, explicit limitations,
-and verified gaps. Each card should contain:
+When question design is part of the task, generate candidates from supported
+findings, explicit limitations, and verified gaps. Each card should contain:
 
 - the question, narrow enough to be answerable;
-- the finding/limitation IDs that motivate it;
+- the `F#` finding or limitation and linked `E#` evidence that motivates it;
 - constructs, population, context, and time period;
 - a plausible method and data requirement, if requested;
 - what would count as an informative answer or disconfirmation;
 - feasibility risks and competing explanations;
-- a note that “novel” or “impactful” remains provisional until checked against
-  the relevant literature and constraints.
+- a note that novelty or impact remains provisional until checked against the
+  relevant literature and constraints.
 
-Questions are proposals, not findings. Do not feed questions generated from an
-unsupported summary back into the synthesis as if they were evidence.
+Questions are proposals, not findings. Do not treat a question generated from
+an unsupported summary as evidence.
 
 ### 5. Thesis-oriented critique
 
-When the user asks for thesis mentoring, return a bounded diagnosis rather than
-a confident gap statement. Distinguish:
+When the user asks for thesis mentoring, give a bounded diagnosis. Distinguish:
 
-- gap supported by the reviewed literature;
-- gap suggested by a limitation or context boundary;
-- gap that is only a hypothesis for further searching;
+- a gap supported by the reviewed literature;
+- a gap suggested by a limitation or context boundary;
+- a gap that is only a hypothesis for further searching;
 - methodological, theoretical, data, and practical contributions.
 
-Only formulate a testable hypothesis when the constructs, direction (if
+Only formulate a testable hypothesis when its constructs, direction (if
 appropriate), population, and observable measures are explicit enough to test.
 Ask the human when the thesis discipline, research paradigm, ethics process,
-or institutional requirements would materially change the recommendation.
+or institutional requirements could materially change the recommendation.
 
-## Minimum academic output
+## Academic deliverables
 
-For a single paper, provide an orientation map plus finding cards and open
-questions in proportion to the chosen rigor level. For a literature review or
-thesis decision, add the thematic synthesis, source/claim trail, conflicts, and
-the question cards or bounded gap diagnosis requested by the user. Keep these
-as sections or records in `working`/`audit` as appropriate; do not create one
-artifact per academic stage.
-
-The concise version may be prose, but every material finding must still be
-traceable. Standard and high-stakes work follows the parent skill's visible
-claim matrix, `E#` entries, source ledger, search record, and stop rationale
-in the applicable research artifacts. The consumer-facing synthesis should
-summarize the audit trail rather than duplicate it.
+Include only the stages and outputs the task needs. A single-paper task may
+need an orientation map and `F#` cards; include open questions when requested
+or useful to the question. A literature review may need thematic synthesis. A
+research-question task may need question cards; thesis mentoring may need a
+bounded gap and contribution diagnosis. Store stage material in the existing
+`working` or `audit` records as appropriate. The parent skill governs evidence
+requirements, retention, and final presentation; do not duplicate its claim
+matrix, `E#` records, source ledger, search record, or stop rationale here.

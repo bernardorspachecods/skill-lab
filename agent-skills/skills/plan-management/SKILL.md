@@ -37,10 +37,14 @@ This skill owns durable plan structure and the organization of plan artifacts.
 
 The coordinator prepares bounded briefs, assigns each enabled research,
 implementation, and formal review stage to agents, and keeps the user informed
-at the agreed checkpoints. It receives, checks, and reconciles agent returns;
-that coordination check is not a formal output review. It may edit plan and
-workflow artifacts and make small plan corrections with the user's agreement,
-but substantive work on the planned deliverable stays with assigned agents.
+at the agreed checkpoints. It receives, checks, and reconciles agent returns
+against the assignment brief, agreed scope, plan criteria, and workflow gates.
+Use the submitted artifacts for this check; route substantive gaps to the
+assigned owner instead of doing new research or review to fill them. This
+coordination check is not a formal output review. The coordinator may edit plan
+and workflow artifacts and make small plan corrections with the user's
+agreement, but substantive work on the planned deliverable stays with assigned
+agents.
 
 ## Planning contract
 

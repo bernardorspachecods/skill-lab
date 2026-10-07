@@ -3,9 +3,11 @@ name: skill-authoring
 description: Create and maintain agent skills.
 ---
 
-#
-
 # Skill mechanics
+
+Use [Writing for Agents](../writing-for-agents/SKILL.md) when selecting content,
+drafting, and reviewing skill instructions and references. This skill owns
+skill packaging, invocation, and resource boundaries.
 
 ### Invocation
 
@@ -33,8 +35,6 @@ The body should contain the shared workflow, decision rules, real constraints, a
 Do not add modes, configuration, providers, scripts, or extra branches without a concrete current use case and verification need.
 
 After closing the skill's scope, rules, and structure, review its prose with the principles of `$plain-technical-writing`. Do not change the architecture, requirements, technical examples, or identifiers during this pass.
-
-Use examples to clarify behavior, output shape, or failure modes. Keep them canonical and label examples as examples; do not let their accidental details become requirements.
 
 ### Splitting and routing
 

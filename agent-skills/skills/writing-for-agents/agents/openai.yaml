@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing for Agents"
+  short_description: "Write concise, sufficient guidance for agents"
+  default_prompt: "Use $writing-for-agents to improve these instructions for an LLM."

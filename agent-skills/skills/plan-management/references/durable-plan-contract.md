@@ -370,6 +370,19 @@ review, and integration gates are satisfied, and any required checkpoint is
 approved. File existence or a provisional result does not unlock downstream
 work. Do not create a parallel artifact state machine.
 
+To identify subplans eligible to start, derive the list from the root's
+`Current phase`, each subplan's `status` and `depends_on`, output availability,
+and the agreed execution gates. Include a `not_started` subplan only when it
+belongs to the active phase, every output it depends on is available under the
+rule above, and no blocker, pending decision, review, or user checkpoint
+prevents work from starting. An empty `depends_on` satisfies only the
+dependency condition. Do not advance to a later phase just because its
+dependencies are satisfied. Report all eligible subplans and, when none are
+eligible, the specific unmet condition for each candidate. Treat this as a
+derived coordination view: do not add or persist a `ready` status. In-progress
+subplans remain active work; blocked subplans remain blocked until the blocker
+is resolved and their status is updated according to the status rules.
+
 For durable plans, keep artifacts beside the unit that coordinates them until
 they are promoted into repository knowledge. Subplan-specific research and
 review artifacts live directly in that subplan's directory. Root research
