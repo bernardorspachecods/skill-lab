@@ -1,0 +1,3 @@
+interface:
+  display_name: "Evaluate Relevance"
+  short_description: "Explain candidates and explore their relevance"

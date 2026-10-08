@@ -9,6 +9,11 @@ Help the user turn what they want into a prompt another LLM or agent can act on.
 
 If a situation matches none of the principles, name the mechanism at play (duplication of a source, drift between prompt and source, reader missing context, critical instruction buried) and apply the fix tied to that mechanism.
 
+Use [prompt guidance](references/prompt-guidance.md) when task complexity
+requires route-specific detail beyond this skill body. Read
+[prompt failure modes](references/failure-modes.md) when auditing or improving
+a weak prompt.
+
 ## The core test
 
 Run this on every section of the anatomy before including it:
@@ -86,3 +91,7 @@ Default to proceeding with a stated assumption. Save a question for the case whe
 Deliver the finished prompt in a single fenced code block, ready to paste. Omitted sections are simply absent, with no "N/A" placeholders. Short prompts can be prose or a few lines; use section headers only when the prompt is long enough to need them.
 
 After the block, add at most a few lines: assumptions made, and one line on what was left out because a source covers it. Do not walk through the anatomy.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

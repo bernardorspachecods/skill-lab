@@ -75,11 +75,12 @@ canonical plan already owns the work.
 3. Keep a conversation plan concise and sufficient for immediate execution.
    Do not add durable structures or workflow settings to it.
 4. Before creating, revising, or coordinating a durable repository plan, read
-   the [durable plan contract](references/durable-plan-contract.md). It owns
-   durable plan structure, artifact scaffolding, execution settings, workflow
-   assignments, handoff gates, and closure. Complete the draft plan, run and
-   reconcile its temporary integrity check, then get the user's agreement
-   before launching research, implementation, or output-review assignments.
+   the [durable plan contract](references/durable-plan-contract.md) and follow
+   its routing instructions. Read the shared rules and the lifecycle guidance
+   for each stage involved; read all lifecycle guidance when the task spans
+   stages. Complete the draft plan, run and reconcile its temporary integrity
+   check, then get the user's agreement before launching research,
+   implementation, or output-review assignments.
 5. Validate durable plan structure and references with the repository's plan
    validator. Review substantive questions—such as whether the objective and
    deliverable are right—separately; a structural validator cannot decide them.
@@ -89,3 +90,8 @@ coordinator uses that reference to create complete briefs and scaffolds.
 Assigned researchers, implementers, and reviewers use the brief and artifact
 locations supplied by the coordinator, alongside the applicable specialist
 skill; they do not need to load the durable plan contract for a bounded task.
+
+## Redoing a plan
+
+When the user says a plan or its work missed their need, or asks to redo it,
+follow the [redo plan protocol](references/redo-plan-protocol.md).

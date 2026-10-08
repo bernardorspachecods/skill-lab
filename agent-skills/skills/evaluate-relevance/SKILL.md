@@ -1,11 +1,11 @@
 ---
 name: evaluate-relevance
 description: Explain and explore candidates with Bernardo, then connect them to his context when useful. Use when he presents a tool, repository, idea, or capability to understand; do not use for simple factual questions.
-metadata:
-  short-description: Explain candidates and explore their relevance
 ---
 
 # Evaluate relevance
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).
 
 Use this skill when Bernardo presents a tool, repository, framework, AI
 capability, idea, or other candidate and wants to understand or discuss it.

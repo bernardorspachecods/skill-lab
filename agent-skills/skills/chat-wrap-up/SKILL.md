@@ -52,3 +52,7 @@ Do not commit, clean the worktree, or implement new work. Report changed
 documents, reused sources, unresolved items, and the next step. If no canonical
 document needs changing, say so and provide a short, copyable prompt pointing
 to the canonical sources without repeating their contents.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

@@ -1,6 +1,5 @@
 interface:
   display_name: "Plain Technical Writing"
   short_description: "Clear technical prose without losing facts"
-  default_prompt: "Use $plain-technical-writing to improve this technical document while preserving its facts, links, commands, and structure."
 policy:
   allow_implicit_invocation: false

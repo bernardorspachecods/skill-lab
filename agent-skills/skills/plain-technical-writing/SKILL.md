@@ -38,7 +38,7 @@ Keep Markdown structure when it carries meaning. In skills and context files, he
 - For error messages, separate what happened, the known cause, and the next action.
 - For reports and release notes, state the time, fact, impact, and remaining uncertainty.
 
-Read [use-cases.md](references/use-cases.md) for these patterns and [word-swaps.md](references/word-swaps.md) for optional lexical cleanup. Use the linter only as an advisory review aid:
+Read [use-cases.md](references/use-cases.md) for these patterns and [word-swaps.md](references/word-swaps.md) for optional lexical cleanup. Use the [linter](scripts/lint_plain_english.py) only as an advisory review aid:
 
 ```text
 python3 scripts/lint_plain_english.py path/to/document.md
@@ -47,3 +47,7 @@ python3 scripts/lint_plain_english.py path/to/document.md
 ## Final check
 
 Before returning the edited document, confirm that links, code, commands, identifiers, facts, headings, lists, and navigation are unchanged unless the user explicitly requested those changes. Check that the rewrite adds no claim, removes no limitation, and does not impose a prose-only reply style on surrounding conversation.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

@@ -1,11 +1,17 @@
 {
   "knowledge": [
-    "KNOW-01"
+    "KNOW-01",
+    "KNOW-02"
   ],
   "knowledge_audits": {
     "KNOW-01": [
       "KNOW-01.AUD-01",
       "KNOW-01.AUD-02"
+    ],
+    "KNOW-02": [
+      "KNOW-02.AUD-01",
+      "KNOW-02.AUD-02",
+      "KNOW-02.AUD-03"
     ]
   },
   "knowledge_working": {},
@@ -44,6 +50,17 @@
       "LR-05.RES-02",
       "LR-05.RES-03",
       "LR-05.RES-04"
+    ],
+    "LR-06": [
+      "LR-06.RES-01",
+      "LR-06.RES-02",
+      "LR-06.RES-03",
+      "LR-06.RES-04",
+      "LR-06.RES-05"
+    ],
+    "LR-07": [
+      "LR-07.RES-01",
+      "LR-07.RES-02"
     ]
   },
   "reviews": {
@@ -75,6 +92,17 @@
       "LR-05.REV-02",
       "LR-05.REV-03",
       "LR-05.REV-04"
+    ],
+    "LR-06": [
+      "LR-06.REV-01",
+      "LR-06.REV-02",
+      "LR-06.REV-03",
+      "LR-06.REV-04",
+      "LR-06.REV-05"
+    ],
+    "LR-07": [
+      "LR-07.REV-01",
+      "LR-07.REV-02"
     ]
   },
   "root_plans": [
@@ -82,7 +110,9 @@
     "LR-02",
     "LR-03",
     "LR-04",
-    "LR-05"
+    "LR-05",
+    "LR-06",
+    "LR-07"
   ],
   "subplans": {
     "LR-001": [
@@ -113,6 +143,17 @@
       "LR-05.SP-02",
       "LR-05.SP-03",
       "LR-05.SP-04"
+    ],
+    "LR-06": [
+      "LR-06.SP-01",
+      "LR-06.SP-02",
+      "LR-06.SP-03",
+      "LR-06.SP-04",
+      "LR-06.SP-05"
+    ],
+    "LR-07": [
+      "LR-07.SP-01",
+      "LR-07.SP-02"
     ]
   }
 }

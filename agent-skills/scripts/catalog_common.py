@@ -31,7 +31,7 @@ MACHINE_PATH_RE = re.compile(
     r"(?:^|[\s(\[=])(?:/Users/|/home/|/private/var/|~/|[A-Za-z]:[\\/])"
 )
 EXTERNAL_SCHEMES = {"http", "https", "mailto", "tel"}
-SUPPORTED_INTERFACE_FIELDS = {"display_name", "short_description", "default_prompt"}
+SUPPORTED_INTERFACE_FIELDS = {"display_name", "short_description"}
 SUPPORTED_POLICY_FIELDS = {"allow_implicit_invocation"}
 
 
@@ -222,7 +222,14 @@ def _is_external(target: str) -> bool:
     return parsed.scheme.lower() in EXTERNAL_SCHEMES or target.startswith("//")
 
 
-def _validate_links(root: Path, package: Path, text: str, issues: list[dict[str, Any]]) -> None:
+def _validate_links(
+    root: Path,
+    package: Path,
+    source_file: Path,
+    text: str,
+    issues: list[dict[str, Any]],
+) -> set[Path]:
+    referenced_files: set[Path] = set()
     for match in LINK_RE.finditer(text):
         target = unquote(match.group(1) or match.group(2) or "").strip()
         line = _line_number(text, match.start())
@@ -238,7 +245,7 @@ def _validate_links(root: Path, package: Path, text: str, issues: list[dict[str,
                 issue(
                     "ABSOLUTE_REFERENCE",
                     "error",
-                    display_path(root, package / "SKILL.md"),
+                    display_path(root, source_file),
                     "a skill link uses an absolute or machine-specific path",
                     "Use a repository-relative link inside the skill package.",
                     line=line,
@@ -247,7 +254,9 @@ def _validate_links(root: Path, package: Path, text: str, issues: list[dict[str,
             )
             continue
         path_target = target.split("#", 1)[0].split("?", 1)[0]
-        resolved = (package / path_target).resolve()
+        if not path_target:
+            continue
+        resolved = (source_file.parent / path_target).resolve()
         try:
             resolved.relative_to(package.resolve())
         except ValueError:
@@ -256,7 +265,7 @@ def _validate_links(root: Path, package: Path, text: str, issues: list[dict[str,
                     issue(
                         "REFERENCE_MISSING",
                         "error",
-                        display_path(root, package / "SKILL.md"),
+                        display_path(root, source_file),
                         f"referenced path does not exist: {target}",
                         "Create the referenced file or correct the relative link.",
                         line=line,
@@ -269,13 +278,115 @@ def _validate_links(root: Path, package: Path, text: str, issues: list[dict[str,
                 issue(
                     "REFERENCE_MISSING",
                     "error",
-                    display_path(root, package / "SKILL.md"),
+                    display_path(root, source_file),
                     f"referenced path does not exist: {target}",
                     "Create the referenced file or correct the relative link.",
                     line=line,
                     location=f"link target {target!r}",
                 )
             )
+        elif resolved.is_file():
+            referenced_files.add(resolved)
+    return referenced_files
+
+
+def _is_generated_skill_file(package: Path, path: Path) -> bool:
+    relative = path.relative_to(package)
+    return (
+        ".DS_Store" in relative.parts
+        or "__pycache__" in relative.parts
+        or path.suffix in {".pyc", ".pyo"}
+    )
+
+
+def _mask_fenced_code(text: str) -> str:
+    lines = text.splitlines(keepends=True)
+    output: list[str] = []
+    fence_char: str | None = None
+    fence_size = 0
+    for line in lines:
+        stripped = line.lstrip(" ")
+        if fence_char is None:
+            match = re.match(r"^(`{3,}|~{3,})", stripped)
+            if match:
+                fence_char = match.group(1)[0]
+                fence_size = len(match.group(1))
+        else:
+            closing = re.match(r"^([`~]+)\s*$", stripped.rstrip("\r\n"))
+            if closing and closing.group(1)[0] == fence_char and len(closing.group(1)) >= fence_size:
+                fence_char = None
+                fence_size = 0
+        if fence_char is not None or re.match(r"^([`~]+)\s*$", stripped.rstrip("\r\n")):
+            output.append("".join("\n" if char == "\n" else "\r" if char == "\r" else " " for char in line))
+        else:
+            output.append(line)
+    return "".join(output)
+
+
+def _validate_package_file_links(
+    root: Path, package: Path, issues: list[dict[str, Any]]
+) -> None:
+    package_root = package.resolve()
+    package_files = sorted(
+        (
+            path.resolve()
+            for path in package.rglob("*")
+            if path.is_file() and not _is_generated_skill_file(package, path)
+        ),
+        key=lambda path: path.as_posix(),
+    )
+    documents: dict[Path, str] = {}
+    links: dict[Path, set[Path]] = {}
+
+    for path in package_files:
+        if path.suffix.lower() != ".md":
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            issues.append(
+                issue(
+                    "RESOURCE_UNAVAILABLE",
+                    "error",
+                    display_path(root, path),
+                    f"Markdown resource could not be read: {exc}",
+                    "Make the resource readable as UTF-8 and rerun the validator.",
+                    status="unavailable",
+                )
+            )
+            continue
+        documents[path] = text
+        links[path] = _validate_links(
+            root, package, path, _mask_fenced_code(text), issues
+        )
+
+    skill_file = (package / "SKILL.md").resolve()
+    reachable: set[Path] = {skill_file}
+    pending = [skill_file]
+    while pending:
+        source = pending.pop()
+        for target in links.get(source, set()):
+            if target not in reachable:
+                reachable.add(target)
+                if target in documents:
+                    pending.append(target)
+
+    for path in package_files:
+        if path == skill_file or path in reachable:
+            continue
+        try:
+            path.relative_to(package_root)
+        except ValueError:
+            continue
+        issues.append(
+            issue(
+                "SKILL_FILE_UNLINKED",
+                "error",
+                display_path(root, path),
+                "skill package file is not reachable through links from SKILL.md",
+                "Add a Markdown link from SKILL.md or another reachable package document.",
+            )
+        )
 
 
 def _validate_machine_paths(root: Path, package: Path, text: str, relative_file: Path, issues: list[dict[str, Any]]) -> None:
@@ -661,7 +772,7 @@ def validate_repository(root: Path, *, check_catalog: bool = False, catalog_path
                 )
             )
 
-        _validate_links(root, package, text, issues)
+        _validate_package_file_links(root, package, issues)
         _validate_machine_paths(root, package, text, Path("SKILL.md"), issues)
         runtime = _validate_runtime_metadata(root, package, issues)
         metadata_path = package / "agents" / "openai.yaml"
@@ -914,7 +1025,7 @@ def generate_catalog(root: Path) -> str:
         )
         if supported:
             lines.append("- Supported UI metadata:")
-            for key in ("display_name", "short_description", "default_prompt"):
+            for key in ("display_name", "short_description"):
                 if key in supported:
                     lines.append(f"  - `{key}`: {_markdown_value(supported[key])}")
         if "allow_implicit_invocation" in supported:

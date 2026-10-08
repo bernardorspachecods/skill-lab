@@ -28,3 +28,7 @@ Example:
 ```text
 $test-first Adiciona suporte para cupões de desconto, começando pelos comportamentos esperados.
 ```
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

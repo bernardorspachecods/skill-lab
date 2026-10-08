@@ -1,4 +1,3 @@
 interface:
   display_name: "Conversation Transcript"
   short_description: "Clean exported session transcripts"
-  default_prompt: "Use $conversation-transcript to clean an exported session file. If the user has not specified messages-only or messages-and-activity, ask which mode to use before editing."

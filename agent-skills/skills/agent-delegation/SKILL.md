@@ -69,3 +69,7 @@ Finish when each assignment has returned its specified output, the primary
 agent has checked and reconciled the result, and any required review or
 integration gate is satisfied. Do not report the delegated work as complete
 while an agent is still running or a required handoff is unresolved.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

@@ -1,4 +1,3 @@
 interface:
   display_name: "Brainstorm"
   short_description: "Think through ideas and decisions together"
-  default_prompt: "Use $brainstorm to think this through with me."

@@ -16,4 +16,15 @@ Run the [transcript cleaner](scripts/clean_transcript.py) with the selected mode
 
 The cleaner preserves only information present in the session. It keeps commands and web queries in their recorded form, marks searches whose query is missing, and preserves agent start, completion, or interruption events. It drops command output and other artifacts.
 
-Run `python3 scripts/clean_transcript.py INPUT --mode MODE`. Use `--output PATH` to write a separate file, `--in-place` to replace the source, or `--rename` when the user asks to rename it. The rename mode uses `codex-trancript-{number}.md`; pass `--rename-number N` when the user supplies a number, or let the script choose the lowest unused positive integer, starting at `1`.
+Run `python3 scripts/clean_transcript.py INPUT --mode MODE`. The cleaner produces one Markdown transcript; without a destination option, it writes the transcript to stdout.
+
+- Use `--output PATH` to write a separate file. Its parent directory must already exist, and `PATH` must differ from the source path.
+- Use `--in-place` only when the user wants the source replaced.
+- Use `--rename` only when the user wants the source renamed. It writes a sibling file named `codex-trancript-{number}.md`, then deletes the source. It chooses the lowest unused positive number starting at `1`.
+- Use `--rename-number N` only with `--rename`; `N` must be positive, and the target file must not already exist. A collision fails without replacing the target.
+
+After writing to a file, check the resulting transcript and report its path.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

@@ -31,3 +31,7 @@ When failed attempts left changes in the repository, after diagnosing the cause 
 If ownership is uncertain, leave the change untouched and report it.
 
 Report the diagnosis, cleanup scope, recommendation, and open questions. Wait for approval before cleanup or implementation. Continue only after the user confirms the direction or the corrected understanding is sufficiently grounded for a low-risk next step.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

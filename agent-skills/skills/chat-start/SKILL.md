@@ -41,3 +41,7 @@ authorization.
 - Treat the user as a collaborator; surface material assumptions and decisions and involve them where it matters.
 - Prefer quality and robust results over convenience or the shortest path.
 - Assume other agents may be working in the repository. Treat changes you did not make as belonging to them: do not edit, revert, stage, commit, clean, or delete those changes unless the user explicitly instructs you to do so.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

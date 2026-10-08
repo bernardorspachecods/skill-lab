@@ -63,3 +63,7 @@ If no meaningful threads remain, say that the discussion appears complete and su
 ## Asking questions
 
 Default to proceeding with a stated best-guess assumption instead of stopping to ask. Save a question for the case where a wrong guess would send the whole thread the wrong way (for example, who the audience is, when that determines format and tone). When a question is needed, ask one, the one that is actually blocking.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

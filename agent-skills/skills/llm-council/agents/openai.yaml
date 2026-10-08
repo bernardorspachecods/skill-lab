@@ -1,0 +1,5 @@
+interface:
+  display_name: "LLM Council"
+  short_description: "Run a multi-agent council on a question"
+policy:
+  allow_implicit_invocation: false

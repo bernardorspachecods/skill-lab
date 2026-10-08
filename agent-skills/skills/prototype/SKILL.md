@@ -26,3 +26,7 @@ The two branches produce very different artifacts — getting this wrong wastes 
 6. **Capture it when done.** Fold any validated decision into the real code, then capture the prototype itself as a **primary source**: commit it to a throwaway branch, out of main, and leave a context pointer to that branch on the implementation issue. Capture the answer too — the verdict and the question it settled — in the issue or a commit. The main branch keeps only the validated decision.
 7. **Stop when the question is answered.** Do not expand scope or turn the prototype into production code during exploration.
 8. **Prefer established patterns before creating a new abstraction or interface.** Check the repository and relevant dependencies first; if a new shape is necessary to answer the question, keep it local to the prototype and explain why.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

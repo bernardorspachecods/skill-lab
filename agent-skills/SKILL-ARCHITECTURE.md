@@ -12,7 +12,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Agent Delegation
   - `short_description`: Delegate bounded work to agents
-  - `default_prompt`: Use $agent-delegation for requested or plan-authorized agent delegation. Load implementation or review guidance as needed.
 
 ## brainstorm
 
@@ -22,7 +21,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Brainstorm
   - `short_description`: Think through ideas and decisions together
-  - `default_prompt`: Use $brainstorm to think this through with me.
 
 ## chat-start
 
@@ -41,7 +39,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Chat Wrap-up
   - `short_description`: Prepare context for the next chat
-  - `default_prompt`: Use $chat-wrap-up to prepare a seamless continuation for the next chat.
 - Runtime policy: `explicit invocation required`
 
 ## code-review
@@ -79,7 +76,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Conversation Transcript
   - `short_description`: Clean exported session transcripts
-  - `default_prompt`: Use $conversation-transcript to clean an exported session file. If the user has not specified messages-only or messages-and-activity, ask which mode to use before editing.
 
 ## domain-modeling
 
@@ -94,7 +90,10 @@ It contains only package metadata and supported runtime metadata derived from th
 
 - Description: Explain and explore candidates with Bernardo, then connect them to his context when useful. Use when he presents a tool, repository, idea, or capability to understand; do not use for simple factual questions.
 - Package: [`agent-skills/skills/evaluate-relevance`](skills/evaluate-relevance/SKILL.md)
-- Runtime metadata: `missing`
+- Runtime metadata: `present`
+- Supported UI metadata:
+  - `display_name`: Evaluate Relevance
+  - `short_description`: Explain candidates and explore their relevance
 
 ## git-worktree-cleanup
 
@@ -132,7 +131,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Plain Technical Writing
   - `short_description`: Clear technical prose without losing facts
-  - `default_prompt`: Use $plain-technical-writing to improve this technical document while preserving its facts, links, commands, and structure.
 - Runtime policy: `explicit invocation required`
 
 ## plan-management
@@ -149,7 +147,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Prompt Design
   - `short_description`: Create and improve LLM prompts
-  - `default_prompt`: Create or improve a prompt for the task I describe. Ask one concise clarification question first if the goal is ambiguous.
 
 ## prototype
 
@@ -168,7 +165,6 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Research
   - `short_description`: Conduct rigorous, source-first web research
-  - `default_prompt`: Use $research, choose the lightest safe rigor level, and show the evidence trail.
 - Runtime policy: `explicit invocation required`
 
 ## skill-authoring
@@ -197,4 +193,3 @@ It contains only package metadata and supported runtime metadata derived from th
 - Supported UI metadata:
   - `display_name`: Writing for Agents
   - `short_description`: Write concise, sufficient guidance for agents
-  - `default_prompt`: Use $writing-for-agents to improve these instructions for an LLM.

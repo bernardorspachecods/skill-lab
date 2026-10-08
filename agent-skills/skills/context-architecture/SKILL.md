@@ -111,3 +111,7 @@ A document with multiple independent areas or enough size to make over-reading l
 - **Cascading maintenance:** a routine child change requires updates to several parent maps instead of only the nearest map, unless a parent scope or cross-folder contract changed.
 - **Mixed lifecycle:** work in progress, archived material, and consolidated knowledge are combined without clear separation.
 - **Duplicated state:** current state is copied into multiple Markdown files, or `CURRENT-STATE.json` grows into an inventory, decision log, or second plan.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

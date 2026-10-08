@@ -24,4 +24,6 @@ When the user says `$git-worktree-cleanup only`, commit only changes made for th
 
 If the user says `$git-worktree-cleanup` without a mode, assume `$git-worktree-cleanup all`.
 
+## Runtime metadata
 
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

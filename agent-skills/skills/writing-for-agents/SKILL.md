@@ -75,3 +75,7 @@ When instructions fail, identify the cause from observed behavior before
 adding rules. If uncertain, state a hypothesis and check it against an actual
 task. Address the mechanism rather than copying the closest-looking example;
 check that the fix preserves other requirements.
+
+## Runtime metadata
+
+This skill's invocation and display metadata is in [agents/openai.yaml](agents/openai.yaml).

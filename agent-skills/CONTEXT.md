@@ -40,3 +40,5 @@ python3 scripts/generate_skill_catalog.py . --check
 
 The validator is read-only. The generator writes only when `--write` is
 explicitly supplied, and only to the two generated catalog files.
+The validator follows relative Markdown links from each skill's `SKILL.md`
+through its package documents and reports package files that are not reachable.
